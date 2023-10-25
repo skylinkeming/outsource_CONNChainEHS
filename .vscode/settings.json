@@ -1,0 +1,14 @@
+{
+    "eslint.format.enable": true,
+    "[javascriptreact]": {
+        "editor.defaultFormatter":"vscode.typescript-language-features",
+    },
+    "[typescriptreact]": {
+        "editor.defaultFormatter":"vscode.typescript-language-features",
+        "editor.autoIndent": "advanced",
+        "editor.trimAutoWhitespace": true,
+        "editor.wordBreak":"normal",
+        "diffEditor.wordWrap": "on",
+        "editor.wordWrapColumn": 80
+    }
+}
