@@ -10,7 +10,7 @@ import Content from './components/content/content.jsx';
 import ThemePanel from './components/theme-panel/theme-panel.jsx';
 
 function App() {	
-	const [appTheme] = useState('');
+	const [appTheme] = useState('orange');
 	const [appDarkMode, setAppDarkMode] = useState(false);
 	const [appGradientEnabled, setAppGradientEnabled] = useState(false);
 	const [appHeaderNone, setAppHeaderNone] = useState(false);
