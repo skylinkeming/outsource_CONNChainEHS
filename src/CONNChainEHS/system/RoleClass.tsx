@@ -1,8 +1,10 @@
 import React from 'react';
 import { useNavigate } from "react-router-dom";
+import {useTranslation, Trans} from 'react-i18next';
 
 function RoleClass() {
-    const navigate = useNavigate();
+  const {t, i18n} = useTranslation();
+  const navigate = useNavigate();
 
   const clickEdit = ()=>{
     navigate("/system/roleEdit")
@@ -16,7 +18,7 @@ function RoleClass() {
         <ol className="breadcrumb float-xl-end">
           <li className="breadcrumb-item"><a href="../index.html">首頁</a></li>
           <li className="breadcrumb-item active">系統管理與設定</li>
-          <li className="breadcrumb-item active">角色階層管理</li>
+          <li className="breadcrumb-item active">{t("breadcrumb.role_level_manage")}</li>
         </ol>
         {/* END breadcrumb */}
         {/* BEGIN page-header */}

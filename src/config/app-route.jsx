@@ -2,8 +2,9 @@ import React from 'react';
 import App from './../app.jsx';
 
 import Home from './../pages/home/home.js';
-import RoleEdit from '../CONNChainEHS/manage/RoleEdit/RoleEdit.tsx';
-import RoleClass from '../CONNChainEHS/manage/RoleClass.tsx';
+import RoleEdit from '../CONNChainEHS/system/RoleEdit/RoleEdit.tsx';
+import RoleClass from '../CONNChainEHS/system/RoleClass.tsx';
+import EmployeeList from '../CONNChainEHS/manage/EmployeeList.tsx';
 
 const AppRoute = [
   {
@@ -21,7 +22,15 @@ const AppRoute = [
       {
 				path: 'system/roleClass', 
 				element: <RoleClass />
-			}
+			},
+			{
+				path: 'manage/employeeList', 
+				element: <EmployeeList />
+			},
+			// {
+			// 	path: 'system/roleClass', 
+			// 	element: <RoleClass />
+			// }
 		]
   }
 ];
