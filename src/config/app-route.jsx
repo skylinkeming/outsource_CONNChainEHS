@@ -2,8 +2,8 @@ import React from 'react';
 import App from './../app.jsx';
 
 import Home from './../pages/home/home.js';
-import RoleEdit from '../CONNChainEHS/system/RoleEdit/RoleEdit.tsx';
-import RoleClass from '../CONNChainEHS/system/RoleClass.tsx';
+import RoleEdit from '../CONNChainEHS/system/roleEdit/RoleEdit.tsx';
+import RoleClass from '../CONNChainEHS/system/roleClass/RoleClass.tsx';
 import EmployeeList from '../CONNChainEHS/manage/employeeList/EmployeeList.tsx';
 import EmployeeEdit from '../CONNChainEHS/manage/employeeEdit/EmployeeEdit.tsx';
 

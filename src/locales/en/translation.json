@@ -1,8 +1,166 @@
 {
     "test":"Hello World",
     "Home":"Home",
-    "breadcrumb":{
-        "role_level_manage":"Role Level Management"
+    "breadcrumb": {
+        "home": "Home",
+        "system_manage_setting": "System Management And Settings",
+        "unit_level_manage": "Unit Level Management",
+        "role_level_manage": "Role Level Management",
+        "func_group_manage": "Function Group Management",
+        "func_view": "System Function View",
+        "unit_user_manage": "Unit And User Management",
+        "unit_manage": "Unit Management",
+        "area_manage": "Area Management",
+        "building_manage": "Building Management",
+        "lab_manage": "Lab Management",
+        "user_manage": "User Management"
+    },
+    "button": {
+        "add": "Add",
+        "back": "Back",
+        "close": "Close",
+        "delete": "Delete",
+        "detail": "Detail",
+        "edit": "Edit",
+        "save": "Save",
+        "search.item": "Search",
+        "search.unit": "Unit Search",
+        "search.building": "Building Search",
+        "search.advanced": "Advanced Search"
+    },
+    "message": {
+        "confirm": {
+          "add": "Are you sure you want to add?",
+          "close": "Are you sure you want to close?",
+          "delete": "Are you sure you want to delete?",
+          "edit": "Are you sure you want to edit?",
+          "save": "Are you sure you want to save?"
+        },
+        "success": "Success",
+        "fail": "Fail",
+        "error": "Error"
+    },
+     "table": {
+        "title": {
+            "account": "Account",
+            "action": "Action",
+            "area": {
+            "address": "Area Address",
+            "ctrl_no": "Area Control No",
+            "item": "Area",
+            "name": "Area Name",
+            "no": "Area No"
+            },
+            "building": {
+            "item": "Building",
+            "name": "Building Name",
+            "no": "Building No",
+            "floor": {
+                "item": "Floor",
+                "basement": "Basement Floor"
+            }
+            },
+            "enable": "Enable",
+            "ext": "Ext.",
+            "func": {
+            "name": "Function Name",
+            "group": "Function Group",
+            "group.description": "Function Group Description",
+            "group.name": "Function Group Name"
+            },
+            "item": "Item",
+            "job_title": "Position",
+            "name": "Name",
+            "phone": "Phone",
+            "unit": {
+            "house_number": "House Number",
+            "level": {
+                "name": "Unit Level Name"
+            },
+            "manager": "Unit Manager",
+            "name": "Unit Name"
+            },
+            "role": {
+            "item": "Role",
+            "description": "Role Description",
+            "level": "Role Level",
+            "name": "Role Name"
+            },
+            "sequence": "Sequence",
+            "pagination": {
+            "previous_page": "Previous Page",
+            "next_page": "Next Page",
+            "total_pages": "Total Pages",
+            "show": "Show",
+            "entries": "entries"
+            }
+        }
+    },
+    "text": {
+        "area": {
+            "item": "Area",
+            "address": "Area Address",
+            "ctrl_no": "Area Control No",
+            "name": "Area Name",
+            "no": "Area No"
+        },
+        "birthday": "Birthday",
+        "building": {
+            "item": "Building",
+            "name": "Building Name",
+            "no": "Building No",
+            "floor": {
+                "item": "Floor",
+                "basement": "Basement Floor"
+            }
+        },
+        "cellphone": "Cellphone",
+        "email": "Email",
+        "func": {
+            "system": "System Functions",
+            "activated": "Activated System Functions",
+            "inactive": "Inactive System Functions",
+            "role_select": "Please select the function to be bound to the role",
+            "group": {
+                "description": "Feature Group Description",
+                "name": "Feature Group Name"
+            }
+        },
+        "gender": "Gender",
+        "job_title": "Position",
+        "lab": {
+            "attribute": "Lab Attribute",
+            "ext": "Lab Ext.",
+            "file": "Lab File",
+            "information": "Lab Information",
+            "name": "Lab Name",
+            "no": "Lab No",
+            "personnel_list": "Lab personnel list",
+            "remark": "Lab Remark",
+            "status": "Lab Status"
+        },
+        "name": "Name",
+        "unit": {
+            "ext": "Ext.",
+            "house_number": "House Number",
+            "manage": "Unit Management",
+            "name": "Unit Name",
+            "level": {
+                "name": "Unit Level Name"
+            }
+        },
+        "previous_manager": "Previous Manager",
+        "previous_unit": "Previous Unit",
+        "previous_userid": "Previous User Id",
+        "role": {
+            "description": "Role Description",
+            "level": "Role Level",
+            "name": "Role Name"
+        },
+        "search": {
+            "item": "Search",
+            "keyword": "Keyword"
+        },
+        "spare_email": "Spare Email"
     }
-
 }

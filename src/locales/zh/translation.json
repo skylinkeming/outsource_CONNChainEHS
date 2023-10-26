@@ -1,7 +1,167 @@
 {
     "test":"哈囉",
     "Home":"首頁",
-    "breadcrumb":{
-        "role_level_manage":"角色階層管理"
+    "breadcrumb": {
+        "home": "首頁",
+        "system_manage_setting": "系統管理與設定",
+        "unit_level_manage": "單位階層管理",
+        "role_level_manage": "角色階層管理",
+        "func_group_manage": "功能群組管理",
+        "func_view": "系統功能查詢",
+        "unit_user_manage": "單位及人員管理",
+        "unit_manage": "單位管理",
+        "area_manage": "區域管理",
+        "building_manage": "建築物管理",
+        "lab_manage": "實驗室管理",
+        "user_manage": "人員管理"
+    },
+    "button": {
+        "add": "新增",
+        "back": "回上一頁",
+        "close": "關閉",
+        "delete": "刪除",
+        "detail": "明細",
+        "edit": "編輯",
+        "save": "儲存",
+        "search.item": "查詢",
+        "search.unit": "單位查詢",
+        "search.building": "建築物查詢",
+        "search.advanced": "進階查詢"
+    },
+    "message": {
+        "confirm": {
+          "add": "您確定要新增嗎？",
+          "close": "您確定要關閉嗎？",
+          "delete": "您確定要刪除嗎？",
+          "edit": "您確定要修改嗎？",
+          "save": "您確定要儲存嗎？"
+        },
+        "success": "成功",
+        "fail": "失敗",
+        "error": "錯誤"
+    },
+    "table": {
+        "title": {
+          "account": "帳號",
+          "action": "功能",
+          "area": {
+            "address": "地址",
+            "ctrl_no": "區域管制編號",
+            "item": "區域",
+            "name": "區域名稱",
+            "no": "區域編號"
+          },
+          "building": {
+            "item": "建築物",
+            "name": "建築物名稱",
+            "no": "建築物編號",
+            "floor": {
+              "item": "樓層",
+              "basement": "地下樓層"
+            }
+          },
+          "enable": "啟用",
+          "ext": "分機",
+          "func": {
+            "name": "功能名稱",
+            "group": "功能群組",
+            "group.description": "功能群組描述",
+            "group.name": "功能群組名稱"
+          },
+          "item": "項次",
+          "job_title": "職稱",
+          "name": "姓名",
+          "phone": "電話",
+          "unit": {
+            "house_number": "門牌",
+            "level": {
+              "name": "單位階層名稱"
+            },
+            "manager": "單位主管",
+            "name": "單位名稱"
+          },
+          "role": {
+            "item": "角色",
+            "description": "角色描述",
+            "level": "角色階層",
+            "name": "角色名稱"
+          },
+          "sequence": "順序",
+          "pagination": {
+            "previous_page": "上一頁",
+            "next_page": "下一頁",
+            "total_pages": "總頁數",
+            "show": "顯示",
+            "entries": "筆"
+          }
+        }
+
+    },
+    "text": {
+        "area": {
+          "item": "區域",
+          "address": "地址",
+          "ctrl_no": "區域管制編號",
+          "name": "區域名稱",
+          "no": "區域編號"
+        },
+        "birthday": "生日",
+        "building": {
+          "item": "建築物",
+          "name": "建築物名稱",
+          "no": "建築物編號",
+          "floor": {
+            "item": "樓層",
+            "basement": "地下樓層"
+          }
+        },
+        "cellphone": "手機",
+        "email": "信箱",
+        "func": {
+          "system": "系統功能",
+          "activated": "已開通系統功能",
+          "inactive": "未開通系統功能",
+          "role_select": "請選擇角色要綁定的功能",
+          "group": {
+            "description": "功能群組描述",
+            "name": "功能群組名稱"
+          }
+        },
+        "gender": "性別",
+        "job_title": "職稱",
+        "lab": {
+          "attribute": "實驗室屬性",
+          "ext": "實驗室分機",
+          "file": "實驗室檔案",
+          "information": "實驗室基本資訊",
+          "name": "實驗室名稱",
+          "no": "實驗室編號",
+          "personnel_list": "實驗室人員清單",
+          "remark": "實驗室備註",
+          "status": "實驗室狀態"
+        },
+        "name": "姓名",
+        "unit": {
+          "ext": "分機",
+          "house_number": "門牌",
+          "manage": "單位管理",
+          "name": "單位名稱",
+          "level": {
+            "name": "單位階層名稱"
+          }
+        },
+        "previous_manager": "原屬主管",
+        "previous_unit": "原屬單位",
+        "previous_userid": "原屬工號",
+        "role": {
+          "description": "角色描述",
+          "level": "角色階層",
+          "name": "角色名稱"
+        },
+        "search": {
+          "item": "搜尋",
+          "keyword": "關鍵字"
+        },
+        "spare_email": "備用信箱"
     }
 }

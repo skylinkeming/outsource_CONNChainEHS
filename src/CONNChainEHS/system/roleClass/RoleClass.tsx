@@ -1,12 +1,12 @@
 import React from 'react';
 import { useNavigate } from "react-router-dom";
-import {useTranslation, Trans} from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 
 function RoleClass() {
-  const {t, i18n} = useTranslation();
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
 
-  const clickEdit = ()=>{
+  const clickEdit = () => {
     navigate("/system/roleEdit")
   }
 
@@ -16,13 +16,13 @@ function RoleClass() {
       <div className="app-content-padding flex-grow-1">
         {/* BEGIN breadcrumb */}
         <ol className="breadcrumb float-xl-end">
-          <li className="breadcrumb-item"><a href="../index.html">首頁</a></li>
-          <li className="breadcrumb-item active">系統管理與設定</li>
+          <li className="breadcrumb-item"><a href="../index.html">{t("breadcrumb.home")}</a></li>
+          <li className="breadcrumb-item active">{t("breadcrumb.system_manage_setting")}</li>
           <li className="breadcrumb-item active">{t("breadcrumb.role_level_manage")}</li>
         </ol>
         {/* END breadcrumb */}
         {/* BEGIN page-header */}
-        <h1 className="page-header">角色階層管理</h1>
+        <h1 className="page-header">{t("breadcrumb.role_level_manage")}</h1>
         {/* END page-header */}
 
         {/* BEGIN row */}
@@ -36,11 +36,11 @@ function RoleClass() {
             <table className="table text-center table-hover align-middle">
               <thead className="fs-4 fw-bold">
                 <tr>
-                  <th>順序</th>
-                  <th>階層</th>
-                  <th>角色名稱</th>
+                  <th>{t("table.title.sequence")}</th>
+                  <th>{t("table.title.role.level")}</th>
+                  <th>{t("table.title.role.name")}</th>
                   <th>說明</th>
-                  <th>功能</th>
+                  <th>{t("table.title.action")}</th>
                 </tr>
               </thead>
               <tbody className="fs-4">
@@ -51,7 +51,7 @@ function RoleClass() {
                   <td></td>
                   <td>
                     <button type="button" className="btn btn-gray me-3 fs-5 goDetail" title="編輯">
-                      <i className="fas fa-file-lines"></i> 明細
+                      <i className="fas fa-file-lines"></i> {t("button.detail")}
                     </button>
                   </td>
                 </tr>
@@ -62,7 +62,7 @@ function RoleClass() {
                   <td></td>
                   <td>
                     <button type="button" className="btn btn-warning me-3 fs-5 goDetail" title="編輯" onClick={clickEdit}>
-                      <i className="fas fa-pen"></i>  編輯
+                      <i className="fas fa-pen"></i>  {t("button.edit")}
                     </button>
                     <a href="#" className="deleteAlert" title="刪除">
                       <i className="fas fa-trash-can fa-lg"></i>

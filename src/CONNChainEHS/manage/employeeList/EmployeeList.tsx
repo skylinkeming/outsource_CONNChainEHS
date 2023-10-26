@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import { useTranslation } from 'react-i18next';
 import EmployeeRow, { EmployeeRowData } from './EmployeeRow.tsx';
 
 function EmployeeList() {
@@ -69,6 +70,7 @@ function EmployeeList() {
       activated: true,
     },
   ]);
+  const { t } = useTranslation();
 
 
   return (
@@ -78,13 +80,13 @@ function EmployeeList() {
         <div className="app-content-padding flex-grow-1">
           {/* BEGIN breadcrumb */}
           <ol className="breadcrumb float-xl-end">
-            <li className="breadcrumb-item"><a href="../index.html">首頁</a></li>
-            <li className="breadcrumb-item active">單位與人員管理</li>
-            <li className="breadcrumb-item active">人員管理</li>
+            <li className="breadcrumb-item"><a href="../index.html">{t('breadcrumb.home')}</a></li>
+            <li className="breadcrumb-item active">{t('breadcrumb.unit_user_manage')}</li>
+            <li className="breadcrumb-item active">{t('breadcrumb.user_manage')}</li>
           </ol>
           {/* END breadcrumb */}
           {/* BEGIN page-header */}
-          <h1 className="page-header">人員管理</h1>
+          <h1 className="page-header">{t('breadcrumb.user_manage')}</h1>
           {/* END page-header */}
 
           {/* BEGIN row */}
@@ -135,9 +137,9 @@ function EmployeeList() {
                   <table id="data-table-default" className="table table-hover table-striped align-middle dt-responsive nowrap">
                     <thead className="fs-4 fw-bold">
                       <tr>
-                        <th>項次</th>
+                        <th>{t('table.title.item')}</th>
                         <th>工號</th>
-                        <th>姓名</th>
+                        <th>{t('table.title.name')}</th>
                         <th>權限</th>
                         <th>單位</th>
                         {/* <th>系所</th> */}
