@@ -179,12 +179,23 @@ function EmployeeList() {
 
 
 const StyledEmployeeList = styled.div`
-    .buttonRow {
-        width:100%;
-        margin-top:10px;
-        display:flex;
-        justify-content:right;
-    }
+  .buttonRow {
+    width:100%;
+    margin-top:10px;
+    display:flex;
+    justify-content:right;
+  }
+  th {
+    text-align: center;
+    white-space:nowrap;
+  }
+  .fas {
+        font-size: 1.2rem;
+    padding: 0.5rem;
+  }
+  .fas.fa-trash-can{
+    color: tomato;
+  }
 `
 
 
