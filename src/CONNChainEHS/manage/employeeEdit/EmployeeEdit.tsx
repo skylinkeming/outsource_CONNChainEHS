@@ -22,11 +22,11 @@ function EmployeeEdit() {
     dept: "電機資訊學院",
     birthday: "2000/01/01",
     gender: "男",
-    userNo: "AAA087087",
+    previousUserId: "AAA087087",
     originalUnit: "隔壁的大學",
   });
 
-  const {t} = useTranslation();
+  const { t } = useTranslation();
 
 
   return (
@@ -52,7 +52,7 @@ function EmployeeEdit() {
         <div className="row mt-3">
           {/* 左邊基本資料 */}
           <div className="col-xl-4">
-            <BasicInfo userInfo={user} />
+            <BasicInfo userInfo={user} onChange={(data) => { setUser({ ...user, ...data }) }} />
           </div>
           {/* 右邊分頁 */}
           <div className="col-xl-8">
