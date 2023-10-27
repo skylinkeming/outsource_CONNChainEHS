@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
+import { useState } from 'react';
+// import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
 import BasicInfo from './BasicInfo';
 import Lab from './Lab';
