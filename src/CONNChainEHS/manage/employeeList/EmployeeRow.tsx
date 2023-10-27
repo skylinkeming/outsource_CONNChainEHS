@@ -1,6 +1,6 @@
 import React from "react"
 import { NavLink } from "react-router-dom";
-
+import styled from "styled-components";
 
 export interface EmployeeRowData {
   userId: string;
@@ -14,7 +14,6 @@ export interface EmployeeRowData {
 export default function EmployeeRow(props: { index: number; data: EmployeeRowData }) {
   const { userId, name, auth, dept, extension, activated } = props.data;
 
- 
 
   return (
     <tr>
@@ -33,3 +32,8 @@ export default function EmployeeRow(props: { index: number; data: EmployeeRowDat
     </tr>
   )
 }
+
+const StyledRow = styled.tr`
+
+
+`
