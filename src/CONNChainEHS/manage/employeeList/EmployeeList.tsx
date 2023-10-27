@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
-import EmployeeRow, { EmployeeRowData } from './EmployeeRow.tsx';
+import EmployeeRow, { EmployeeRowData } from './EmployeeRow';
 
 function EmployeeList() {
   const [employDataList, setEmployDataList] = useState<Array<EmployeeRowData>>([

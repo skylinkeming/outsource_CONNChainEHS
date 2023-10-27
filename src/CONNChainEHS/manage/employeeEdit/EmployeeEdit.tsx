@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
-import BasicInfo from './BasicInfo.tsx';
-import Lab from './Lab.tsx';
-import OtherAuths from './OtherAuths.tsx';
-import EduRecords from './EduRecords.tsx';
-import { UserInfo } from './BasicInfo.tsx';
+import BasicInfo from './BasicInfo';
+import Lab from './Lab';
+import OtherAuths from './OtherAuths';
+import EduRecords from './EduRecords';
+import { UserInfo } from './BasicInfo';
 
 function EmployeeEdit() {
   const [user, setUser] = useState<UserInfo>({
