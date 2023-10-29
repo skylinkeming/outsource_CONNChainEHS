@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState } from "react"
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 
@@ -11,9 +11,13 @@ export interface EmployeeRowData {
   activated: boolean;
 }
 
-export default function EmployeeRow(props: { index: number; data: EmployeeRowData }) {
+export default function EmployeeRow(props: {
+  index: number;
+  data: EmployeeRowData;
+  onChangeStatus: (activated: boolean) => void;
+  onDelete: () => void;
+}) {
   const { userId, name, auth, dept, extension, activated } = props.data;
-
 
   return (
     <tr>
@@ -24,16 +28,22 @@ export default function EmployeeRow(props: { index: number; data: EmployeeRowDat
       <td>{dept}</td>
       {/* <td></td> */}
       <td>{extension}</td>
-      <td><input type="checkbox" className="switchery-area" checked={activated} /></td>
       <td>
-        <a href="../manage/employeeEdit.html"><NavLink to='/manage/employeeEdit'><i className="fas fa-user"></i></NavLink></a>
-        <a href="#" className="deleteAlert"><i className="fas fa-trash-can"></i></a>
+        <div className="form-check form-switch d-flex justify-content-center align-items-center">
+          <input
+            className="form-check-input"
+            type="checkbox"
+            checked={activated}
+            onChange={(e) => {
+              props.onChangeStatus(e.target.checked)
+            }}
+          />
+        </div>
+      </td>
+      <td>
+        <NavLink to='/manage/employeeEdit'><i className="fas fa-user"></i></NavLink>
+        <a href="#" className="deleteAlert" onClick={e => { props.onDelete() }}><i className="fas fa-trash-can"></i></a>
       </td>
     </tr>
   )
 }
-
-const StyledRow = styled.tr`
-
-
-`

@@ -157,6 +157,9 @@ const RightCornerWrap = styled.div`
 			margin-right:5px;
 		}
 	}
+	@media (max-width:767px) {
+		width:auto;
+	}
 	
 `;
 

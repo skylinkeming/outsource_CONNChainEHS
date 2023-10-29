@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
+import Dialog from '../../common/Dialog';
+import AddRole from './AddRole';
 
 function RoleClass() {
   const { t, i18n } = useTranslation();
+  const [showAddPopup, setShowAddPopup] = useState(false);
   const navigate = useNavigate();
 
   const clickEdit = () => {
@@ -12,6 +15,7 @@ function RoleClass() {
 
   return (
     <div className="d-flex flex-column p-0" id="content">
+      <Dialog content={<AddRole clickCloseBtn={()=>{ setShowAddPopup(false) }}/>} show={showAddPopup} />
       {/* BEGIN scrollbar */}
       <div className="app-content-padding flex-grow-1">
         {/* BEGIN breadcrumb */}
@@ -27,7 +31,11 @@ function RoleClass() {
 
         {/* BEGIN row */}
         {/* 新增單位階層 button */}
-        <button type="button" data-bs-target="#addRole" data-bs-toggle="modal" className="btn btn-purple fs-5">
+        <button type="button" className="btn btn-purple fs-5"
+          onClick={() => {
+            setShowAddPopup(true);
+          }}
+        >
           <i className="fas fa-user-plus"></i> 新增角色
         </button>
 

@@ -16,7 +16,7 @@ function RoleEdit() {
       <div className="d-flex flex-column p-0" id="content">
         {/* BEGIN scrollbar */}
         <div className="app-content-padding flex-grow-1">
-          {/* BEGIN breadcrumb */}
+          {/* BEGIN bradcrumb */}
           <ol className="breadcrumb float-xl-end">
             <li className="breadcrumb-item"><a href="../index.html">{t("breadcrumb.home")}</a></li>
             <li className="breadcrumb-item active">{t("breadcrumb.system_manage_setting")}</li>
@@ -29,8 +29,12 @@ function RoleEdit() {
           {/* END page-header */}
 
           {/* BEGIN row */}
-          <button type="button" className="btn btn-default fs-5 goBack" value="回上一頁">
-            <i className="fas fa-arrow-left"></i> {t("button.back")}
+          <button type="button" className="btn btn-default fs-5 goBack"
+            onClick={() => {
+              window.history.back()
+            }}
+          >
+            <i className="fas fa-arrow-left" /> {t("button.back")}
           </button>
 
           {/* 階層名稱說明 */}
