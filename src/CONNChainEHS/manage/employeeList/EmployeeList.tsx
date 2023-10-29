@@ -2,6 +2,7 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
 import EmployeeRow, { EmployeeRowData } from './EmployeeRow';
+import Footer from '../../layout/Footer';
 
 function EmployeeList() {
   const [employDataList, setEmployDataList] = useState<Array<EmployeeRowData>>([
@@ -221,15 +222,7 @@ function EmployeeList() {
         </div>
         {/* END scrollbar */}
         {/* BEGIN #footer */}
-        <div className="app-footer m-0 mt-5" id="footer">
-          <div className="row justify-content-center">
-            <div className="col-xl-4 fs-5 text-center">
-              <div>TEL：03-5718846</div>
-              <div>mail：service@cloudthink.com.tw</div>
-              <div>Copyright © 2023 雲集科技行銷有限公司 All Right Reserved</div>
-            </div>
-          </div>
-        </div>
+        <Footer/>
         {/* END #footer */}
       </div>
     </StyledEmployeeList>
@@ -238,6 +231,8 @@ function EmployeeList() {
 
 
 const StyledEmployeeList = styled.div`
+  padding-bottom:150px;
+
   .buttonRow {
     width:100%;
     margin-top:10px;

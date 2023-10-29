@@ -30,8 +30,8 @@ const StyledDialog = styled.div<{ show?: boolean; }>`
     .dialogContent{
         overflow:hidden;
         background:white;
-        animation: slide-up 1s ease-out forwards;
-        transform: translateY(100%);
+        // animation: slide-up 1s ease-out forwards;
+        // transform: translateY(100%);
         border-radius: 8px;
         min-width:300px;
         box-shadow: 0 4px 20px 0 rgb(0 0 0 / 10%), 0 1px 2px 0 rgb(0 0 0 / 6%);

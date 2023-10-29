@@ -41,8 +41,8 @@ export default function AddRole(props:{clickCloseBtn:()=>void}) {
                         </div>
                     </div>
                     <div className="addRole-footer">
-                        <button className="btn btn-white" onClick={props.clickCloseBtn}>關閉</button>
-                        <button type="submit" className="btn btn-purple" id="add-role-submit">
+                        <button className="btn btn-white" aria-hidden="true" onClick={props.clickCloseBtn}>關閉</button>
+                        <button type="submit" className="btn btn-purple">
                             <i className="fas fa-cubes"></i> 新增角色
                         </button>
                     </div>
