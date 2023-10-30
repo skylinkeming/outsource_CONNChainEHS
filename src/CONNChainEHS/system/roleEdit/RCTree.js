@@ -3,6 +3,9 @@ import '../../assets/index.less';
 import '../../assets/basic.less';
 import styled from 'styled-components';
 import Tree, { TreeNode } from 'rc-tree';
+import folder from '../../../assets/img/folder.png';
+import openFolder from '../../../assets/img/open-folder.png';
+
 
 
 class RCTree extends React.Component {
@@ -85,6 +88,7 @@ class RCTree extends React.Component {
                         onSelect={this.onSelect}
                         onCheck={this.onCheck}
                         treeData={this.props.treeData}
+                        // icon={<img style={{width:"16px", height:"16px"}} src={folder} alt="open-folder" />}
                     />
                 </div>
             </StyledRCTree>
@@ -96,7 +100,17 @@ export default RCTree;
 
 const StyledRCTree = styled.div`
     font-size:16px;
-    .rc-tree-iconEle{
-        background-image:url("")
-    }
+    // .rc-tree-icon__open,.rc-tree-iconEle{
+    //     width:18px !important;
+    //     height:18px !important;
+    //     background-image:url(${openFolder}) !important;
+    //     background-position:0 !important;
+    //     background-size: contain;
+    //     background-size: 18px 18px;
+    // }
+    // .rc-tree-icon__close {
+    //     background-image:url(${folder}) !important;
+    //     background-position:0 !important;
+    //     background-size: 16px 16px;
+    // }
 `;

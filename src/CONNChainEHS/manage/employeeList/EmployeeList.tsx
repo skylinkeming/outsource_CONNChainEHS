@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
 import EmployeeRow, { EmployeeRowData } from './EmployeeRow';
 import Footer from '../../layout/Footer';
+import SortIcon from '../../common/SortIcon';
 
 function EmployeeList() {
   const [employDataList, setEmployDataList] = useState<Array<EmployeeRowData>>([
@@ -158,14 +159,14 @@ function EmployeeList() {
                   <table id="data-table-default" className="table table-hover table-striped align-middle dt-responsive nowrap">
                     <thead className="fs-4 fw-bold">
                       <tr>
-                        <th>{t('table.title.item')}</th>
-                        <th>工號</th>
-                        <th>{t('table.title.name')}</th>
-                        <th>權限</th>
-                        <th>單位</th>
+                        <th>{t('table.title.item')} </th>
+                        <th>工號 <SortIcon dataList={employDataList} dataField={"userId"} setFunction={setEmployDataList}/></th>
+                        <th>{t('table.title.name')} <SortIcon dataList={employDataList} dataField={"name"} setFunction={setEmployDataList}/></th>
+                        <th>權限 <SortIcon dataList={employDataList} dataField={"auth"} setFunction={setEmployDataList}/></th>
+                        <th>單位 <SortIcon dataList={employDataList} dataField={"dept"} setFunction={setEmployDataList}/></th>
                         {/* <th>系所</th> */}
-                        <th>分機</th>
-                        <th data-orderable="false">啟用</th>
+                        <th>分機 <SortIcon dataList={employDataList} dataField={"extension"} setFunction={setEmployDataList}/></th>
+                        <th data-orderable="false">啟用 <SortIcon dataList={employDataList} dataField={"activated"} setFunction={setEmployDataList}/></th>
                         <th data-orderable="false">管理</th>
                       </tr>
                     </thead>
