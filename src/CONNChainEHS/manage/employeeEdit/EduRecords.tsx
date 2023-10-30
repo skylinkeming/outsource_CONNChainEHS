@@ -58,5 +58,5 @@ export default function EduRecords() {
 
 
 const StyledEduRecords = styled.div`
-
+    overflow: auto;
 `
