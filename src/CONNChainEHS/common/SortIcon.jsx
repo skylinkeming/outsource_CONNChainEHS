@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 
 export default function SortIcon({ dataList, dataField, setFunction }) {
-    const [direction, setDirection] = useState("up");
+    const [direction, setDirection] = useState("");
 
     useEffect(() => {
         if (!direction) {
@@ -25,7 +25,9 @@ export default function SortIcon({ dataList, dataField, setFunction }) {
     };
 
     const iconClass = () => {
-        if (!direction || direction === "up") {
+        if (!direction) {
+            return "fa-sort";
+        } else if (direction === "up") {
             return "fa-sort-up";
         } else {
             return "fa-sort-down";
@@ -35,7 +37,7 @@ export default function SortIcon({ dataList, dataField, setFunction }) {
     return (
         <i
             className={`fas fa-lg fa-fw me-15px ${iconClass()}`}
-            style={{ cursor: "pointer" }}
+            style={{ cursor: "pointer", color: !direction ? "#ccc" : "#348fe2", fontSize: "14px" }}
             onClick={() => {
                 setDirection(direction === "up" ? "down" : "up");
             }}
