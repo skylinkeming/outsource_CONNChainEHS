@@ -21,14 +21,14 @@ export default function EmployeeRow(props: {
 
   return (
     <tr>
-      <td width="5%">{props.index}</td>
-      <td>{userId}</td>
-      <td>{name}</td>
-      <td>{auth}</td>
-      <td>{dept}</td>
+      <td data-title="項次">{props.index}</td>
+      <td data-title="工號">{userId}</td>
+      <td data-title="姓名">{name}</td>
+      <td data-title="權限">{auth}</td>
+      <td data-title="單位">{dept}</td>
       {/* <td></td> */}
-      <td>{extension}</td>
-      <td>
+      <td data-title="分機">{extension}</td>
+      <td data-title="啟用">
         <div className="form-check form-switch d-flex justify-content-center align-items-center">
           <input
             className="form-check-input"
@@ -40,9 +40,9 @@ export default function EmployeeRow(props: {
           />
         </div>
       </td>
-      <td>
+      <td data-title="管理">
         <NavLink to='/manage/employeeEdit'><i className="fas fa-user"></i></NavLink>
-        <a href="#" className="deleteAlert" onClick={e => { props.onDelete() }}><i className="fas fa-trash-can"></i></a>
+        <i style={{ cursor: "pointer" }} className="fas fa-trash-can" onClick={e => { props.onDelete() }}></i>
       </td>
     </tr>
   )

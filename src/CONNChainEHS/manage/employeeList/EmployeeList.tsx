@@ -75,6 +75,11 @@ function EmployeeList() {
   const { t } = useTranslation();
 
 
+
+
+
+
+
   return (
     <StyledEmployeeList>
       <div className="d-flex flex-column p-0" id="content">
@@ -97,38 +102,37 @@ function EmployeeList() {
               {/* 查詢 */}
               <div className="card">
                 <div className="card-body p-4">
-                  <h5><i className="fas fa-search"></i> 查詢</h5>
-                  <div className="column">
-                    <div className="col-xl-3 d-flex align-items-center w-100 mt-3">
-                      <label htmlFor="" className="pe-3 w-25">單位分類</label>
+                  <h5><i className="fas fa-magnifying-glass"></i> 查詢</h5>
+                  <div className="row">
+                    <div className="col-xl-3 d-flex align-items-center">
+                      <label htmlFor="" className="pe-3">單位分類</label>
                       <select name="" id="" className="form-select w-75">
                         <option value="">行政</option>
                         <option value="">教學</option>
                         <option value="">中心</option>
                       </select>
                     </div>
-                    <div className="col-xl-3 d-flex align-items-center w-100 mt-3">
-                      <label htmlFor="" className="pe-3 w-25">學院</label>
+                    <div className="col-xl-3 d-flex align-items-center">
+                      <label htmlFor="" className="pe-3">學院</label>
                       <select name="" id="" className="form-select w-75">
                         <option value="">理學院</option>
                         <option value="">醫學院</option>
                       </select>
                     </div>
-                    <div className="col-xl-3 d-flex align-items-center w-100 mt-3">
-                      <label htmlFor="" className="pe-3 w-25">系所</label>
+                    <div className="col-xl-3 d-flex align-items-center">
+                      <label htmlFor="" className="pe-3">系所</label>
                       <select name="" id="" className="form-select w-75">
                         <option value="">理學院</option>
                         <option value="">醫學院</option>
                       </select>
                     </div>
-                    <div className="col-xl-3 d-flex align-items-center w-100 mt-3">
-                      <label htmlFor="" className="w-25">{"關鍵字查詢{{工號、姓名}}"}</label>
+                    <div className="col-xl-3 d-flex align-items-center">
+                      <label htmlFor="">{'關鍵字查詢{{ 工號、姓名}}'}</label>
                       <input type="text" className="form-control w-75" placeholder="請輸入關鍵字查詢" />
                     </div>
-                    <div className="buttonRow col-xl-3 d-flex align-items-center">
-                      <button type="button" className="btn btn-warning">
-                        <i className="fas fa-search"></i> 查詢
-                      </button>
+                    <div className="buttonPanel col-xl-3 d-flex align-items-center">
+                      <button type="button" className="btn btn-warning"><i
+                        className="fas fa-magnifying-glass"></i> 查詢</button>
                     </div>
                   </div>
                 </div>
@@ -156,23 +160,24 @@ function EmployeeList() {
                   </div>
                 </div>
                 <div className="card-body">
-                  <table id="data-table-default" className="table table-hover table-striped align-middle dt-responsive nowrap">
+                  <table id="data-table-default" className={'table table-striped table-hover align-middle dt-responsive nowrap'}>
                     <thead className="fs-4 fw-bold">
                       <tr>
                         <th>{t('table.title.item')} </th>
-                        <th>工號 <SortIcon dataList={employDataList} dataField={"userId"} setFunction={setEmployDataList}/></th>
-                        <th>{t('table.title.name')} <SortIcon dataList={employDataList} dataField={"name"} setFunction={setEmployDataList}/></th>
-                        <th>權限 <SortIcon dataList={employDataList} dataField={"auth"} setFunction={setEmployDataList}/></th>
-                        <th>單位 <SortIcon dataList={employDataList} dataField={"dept"} setFunction={setEmployDataList}/></th>
+                        <th>工號 <SortIcon dataList={employDataList} dataField={"userId"} setFunction={setEmployDataList} /></th>
+                        <th>{t('table.title.name')} <SortIcon dataList={employDataList} dataField={"name"} setFunction={setEmployDataList} /></th>
+                        <th>權限 <SortIcon dataList={employDataList} dataField={"auth"} setFunction={setEmployDataList} /></th>
+                        <th>單位 <SortIcon dataList={employDataList} dataField={"dept"} setFunction={setEmployDataList} /></th>
                         {/* <th>系所</th> */}
-                        <th>分機 <SortIcon dataList={employDataList} dataField={"extension"} setFunction={setEmployDataList}/></th>
-                        <th data-orderable="false">啟用 <SortIcon dataList={employDataList} dataField={"activated"} setFunction={setEmployDataList}/></th>
+                        <th>分機 <SortIcon dataList={employDataList} dataField={"extension"} setFunction={setEmployDataList} /></th>
+                        <th data-orderable="false">啟用 <SortIcon dataList={employDataList} dataField={"activated"} setFunction={setEmployDataList} /></th>
                         <th data-orderable="false">管理</th>
                       </tr>
                     </thead>
                     <tbody className="text-center fs-5">
                       {employDataList.map((data, idx) => {
                         return <EmployeeRow
+                          key={data.userId}
                           index={idx + 1}
                           data={data}
                           onChangeStatus={(activated) => {
@@ -223,7 +228,7 @@ function EmployeeList() {
         </div>
         {/* END scrollbar */}
         {/* BEGIN #footer */}
-        <Footer/>
+        <Footer />
         {/* END #footer */}
       </div>
     </StyledEmployeeList>
@@ -272,11 +277,11 @@ const StyledEmployeeList = styled.div`
       justify-content:right;
     }
   }
-  th {
-    text-align: center;
-    white-space:nowrap;
-  }
   table {
+    th {
+      text-align: center;
+      white-space:nowrap;
+    }
     .fas {
       font-size: 1.2rem;
       padding: 0.5rem;
@@ -284,6 +289,50 @@ const StyledEmployeeList = styled.div`
     .fas.fa-trash-can{
       color: tomato;
     }
+    tr:nth-of-type(2n+1){
+      background:#e9ecef;
+    }
+  }
+  @media (max-width: 600px){
+    label {
+      width:200px;
+    }
+    .buttonPanel {
+      margin-top:10px;
+      display:flex;
+      justify-content: flex-end;
+    }
+    thead {
+      display:none;
+    }
+    tbody, td, tr {
+      display:block;
+      background: #fff !important;
+      box-shadow: inset 0 0 0 9999px white;
+
+    }
+    tr {
+      border: 1px solid #ccc;
+      margin-bottom: 10px;
+      background: #fff !important;
+    }
+    td {
+      background: #fff!important;
+      position:relative;
+    }
+    td::before {
+        content: attr(data-title);
+        position: absolute;
+        top: 6px;
+        left: 6px;
+        width: 30%;
+        padding-right: 10px;
+        white-space: nowrap;
+        text-align: left;
+        font-weight: bold;
+        color: #1a1a1a;
+      }
+    
   }
 `
 
