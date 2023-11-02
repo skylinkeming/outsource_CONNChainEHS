@@ -319,6 +319,7 @@ const StyledEmployeeList = styled.div`
     td {
       background: #fff!important;
       position:relative;
+      padding-left: 50px;
     }
     td::before {
         content: attr(data-title);
@@ -331,7 +332,7 @@ const StyledEmployeeList = styled.div`
         text-align: left;
         font-weight: bold;
         color: #1a1a1a;
-      }
+    }
     
   }
 `

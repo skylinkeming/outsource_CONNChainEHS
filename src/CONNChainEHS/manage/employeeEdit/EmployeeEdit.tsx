@@ -46,7 +46,14 @@ function EmployeeEdit() {
         {/* END page-header */}
 
         {/* BEGIN row */}
-        <button type="button" className="btn btn-default fs-5" onClick={() => { }} value="回上一頁">
+        <button
+          type="button"
+          className="btn btn-default fs-5"
+          onClick={() => {
+            window.history.back()
+          }}
+          value="回上一頁"
+        >
           <i className="fas fa-arrow-left"></i> {t('button.back')}
         </button>
         <div className="row mt-3">
