@@ -1,7 +1,24 @@
 import styled from "styled-components";
-import React from "react";
+import React, { useState } from "react";
+
+interface OtherAuthData {
+    authType: string;
+    unit: string;
+}
 
 export default function OtherAuths() {
+    const [dataList, setDataList] = useState<Array<OtherAuthData>>([
+        {
+            authType: "實驗室負責人",
+            unit: "奈微與材料科技中心"
+        },
+        {
+            authType: "管理者",
+            unit: "半導體中心"
+        },
+    ]);
+
+
     return (
         <div className="tab-pane fade" id="employee-tab-2">
             <StyledOtherAuths>
@@ -50,21 +67,8 @@ export default function OtherAuths() {
                         </tr>
                     </thead>
                     <tbody className="text-center fs-5">
-                        <tr>
-                            <td>實驗室負責人</td>
-                            <td>奈微與材料科技中心</td>
-                            <td><a href="#" className="deleteAlert"><i className="fas fa-trash-can"></i></a></td>
-                        </tr>
-                        <tr>
-                            <td>實驗室負責人</td>
-                            <td>奈微與材料科技中心</td>
-                            <td><a href="#" className="deleteAlert"><i className="fas fa-trash-can"></i></a></td>
-                        </tr>
-                        <tr>
-                            <td>實驗室負責人</td>
-                            <td>奈微與材料科技中心</td>
-                            <td><a href="#" className="deleteAlert"><i className="fas fa-trash-can"></i></a></td>
-                        </tr>
+                        {dataList.map(data => <Row key={data.unit} {...data} />)}
+
                     </tbody>
                 </table>
             </StyledOtherAuths>
@@ -73,6 +77,61 @@ export default function OtherAuths() {
 
 }
 
+
+const Row = (props: OtherAuthData) => {
+    return (<tr>
+        <td data-title="權限">{props.authType}</td>
+        <td data-title="單位">{props.unit}</td>
+        <td data-title="管理"><i className="fas fa-trash-can"></i></td>
+    </tr>)
+}
+
 const StyledOtherAuths = styled.div`
+    .fas.fa-trash-can{
+        cursor:pointer;
+    }
+    @media (max-width: 600px){
+        label {
+            width:200px;
+        }
+        .buttonPanel {
+            margin-top:10px;
+            display:flex;
+            justify-content: flex-end;
+        }
+        thead {
+            display:none;
+        }
+        tbody, td, tr {
+            display:block;
+            background: #fff !important;
+            box-shadow: inset 0 0 0 9999px white;
+
+        }
+        tr {
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
+            background: #fff !important;
+        }
+        td {
+            background: #fff!important;
+            position:relative;
+            padding-left: 100px;
+            text-align:left;
+        }
+        td::before {
+            content: attr(data-title);
+            position: absolute;
+            top: 6px;
+            left: 6px;
+            width: 30%;
+            padding-right: 10px;
+            white-space: nowrap;
+            text-align: left;
+            font-weight: bold;
+            color: #1a1a1a;
+        }
+    
+    }
 
 `

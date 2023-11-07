@@ -319,7 +319,8 @@ const StyledEmployeeList = styled.div`
     td {
       background: #fff!important;
       position:relative;
-      padding-left: 50px;
+      padding-left: 100px;
+      text-align:left;
     }
     td::before {
         content: attr(data-title);

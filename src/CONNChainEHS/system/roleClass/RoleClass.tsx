@@ -6,9 +6,54 @@ import Dialog from '../../common/Dialog';
 import AddRole from './AddRole';
 import Footer from '../../layout/Footer';
 
+interface RoleData {
+  level: string;
+  roleName: string;
+  description: string;
+  function: Permission;
+}
+
+enum Permission {
+  CanView,
+  CanEdit
+}
+
+
 function RoleClass() {
   const { t, i18n } = useTranslation();
   const [showAddPopup, setShowAddPopup] = useState(false);
+  const [dataList, setDataList] = useState<Array<RoleData>>([
+    {
+      level: "階級一",
+      roleName: "總管理者",
+      description: "",
+      function: Permission.CanView
+    },
+    {
+      level: "階級二",
+      roleName: "環安人員",
+      description: "",
+      function: Permission.CanEdit
+    },
+    {
+      level: "階級三",
+      roleName: "單位管理人",
+      description: "",
+      function: Permission.CanEdit
+    },
+    {
+      level: "階級四",
+      roleName: "實驗室負責人",
+      description: "",
+      function: Permission.CanEdit
+    },
+    {
+      level: "階級四",
+      roleName: "實驗室管理人",
+      description: "",
+      function: Permission.CanEdit
+    },
+  ]);
   const navigate = useNavigate();
 
   const clickEdit = () => {
@@ -55,73 +100,7 @@ function RoleClass() {
                   </tr>
                 </thead>
                 <tbody className="fs-4">
-                  <tr>
-                    <td>1</td>
-                    <td>階級一</td>
-                    <td>總管理者</td>
-                    <td></td>
-                    <td>
-                      <button type="button" className="btn btn-gray me-3 fs-5 goDetail" title="編輯">
-                        <i className="fas fa-file-lines"></i> {t("button.detail")}
-                      </button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>2</td>
-                    <td>階級二</td>
-                    <td>環安人員</td>
-                    <td></td>
-                    <td>
-                      <button type="button" className="btn btn-warning me-3 fs-5 goDetail" title="編輯" onClick={clickEdit}>
-                        <i className="fas fa-pen"></i>  {t("button.edit")}
-                      </button>
-                      <a href="#" className="deleteAlert" title="刪除">
-                        <i className="fas fa-trash-can fa-lg"></i>
-                      </a>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>3</td>
-                    <td>階級三</td>
-                    <td>單位管理人</td>
-                    <td></td>
-                    <td>
-                      <button type="button" className="btn btn-warning me-3 fs-5 goDetail" title="編輯">
-                        <i className="fas fa-pen"></i>  編輯
-                      </button>
-                      <a href="#" className="deleteAlert" title="刪除">
-                        <i className="fas fa-trash-can fa-lg"></i>
-                      </a>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>4</td>
-                    <td>階級四</td>
-                    <td>實驗室負責人</td>
-                    <td></td>
-                    <td>
-                      <button type="button" className="btn btn-warning me-3 fs-5 goDetail" title="編輯">
-                        <i className="fas fa-pen"></i>  編輯
-                      </button>
-                      <a href="#" className="deleteAlert" title="刪除">
-                        <i className="fas fa-trash-can fa-lg"></i>
-                      </a>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>5</td>
-                    <td>階級四</td>
-                    <td>實驗室管理人</td>
-                    <td></td>
-                    <td>
-                      <button type="button" className="btn btn-warning me-3 fs-5" title="編輯">
-                        <i className="fas fa-pen"></i>  編輯
-                      </button>
-                      <a href="#" className="deleteAlert" title="刪除">
-                        <i className="fas fa-trash-can fa-lg"></i>
-                      </a>
-                    </td>
-                  </tr>
+                  {dataList.map((data, idx) => <Row key={idx} index={idx} role={{ ...data }} />)}
                 </tbody>
               </table>
             </div>
@@ -146,8 +125,72 @@ function RoleClass() {
   );
 }
 
-export default RoleClass;
+
+const Row = (props: { index: number; role: RoleData }) => {
+  return (
+    <tr>
+      <td data-title="順序">{props.index}</td>
+      <td data-title="階層">{props.role.level}</td>
+      <td data-title="角色名稱">{props.role.roleName}</td>
+      <td data-title="說明">{props.role.description}</td>
+      <td data-title="功能">
+        {props.role.function === Permission.CanEdit ?
+          <button type="button" className="btn btn-warning me-3 fs-5" title="編輯">
+            <i className="fas fa-pen"></i>  編輯
+          </button>
+          :
+          <i className="fas fa-trash-can fa-lg"></i>
+        }
+      </td>
+    </tr>
+  )
+}
 
 const StlyedRoleClass = styled.div`
   padding-bottom:150px;
+    @media (max-width: 600px){
+        label {
+            width:200px;
+        }
+        .buttonPanel {
+            margin-top:10px;
+            display:flex;
+            justify-content: flex-end;
+        }
+        thead {
+            display:none;
+        }
+        tbody, td, tr {
+            display:block;
+            background: #fff !important;
+            box-shadow: inset 0 0 0 9999px white;
+
+        }
+        tr {
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
+            background: #fff !important;
+        }
+        td {
+            background: #fff!important;
+            position:relative;
+            padding-left: 100px;
+            text-align:left;
+        }
+        td::before {
+            content: attr(data-title);
+            position: absolute;
+            top: 6px;
+            left: 6px;
+            width: 30%;
+            padding-right: 10px;
+            white-space: nowrap;
+            text-align: left;
+            font-weight: bold;
+            color: #1a1a1a;
+        }
+    
+    }
 `
+
+export default RoleClass;

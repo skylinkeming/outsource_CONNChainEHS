@@ -68,6 +68,20 @@ export default function EduRecords() {
     );
 }
 
+const Row = (props: EducationData) => {
+    return (
+        <tr key={props.trainingNum}>
+            <td data-title="受訓日期">{props.date}</td>
+            <td data-title="受訓名稱">{props.trainingName}</td>
+            <td data-title="訓練類型">{props.trainingType}</td>
+            <td data-title="訓練證號">{props.trainingNum}</td>
+            <td data-title="證照天數">{props.licenseDays}</td>
+            <td data-title="證照到期日">{props.licenseDueDate}</td>
+            <td data-title="成績">{props.grade}</td>
+            <td data-title="管理"><i className="fas fa-trash-can"></i></td>
+        </tr>
+    )
+}
 
 const StyledEduRecords = styled.div`
     overflow: auto;
@@ -89,6 +103,7 @@ const StyledEduRecords = styled.div`
             background: #fff!important;
             position:relative;
             padding-left: 100px;
+            text-align:left;
         }
         td::before {
             content: attr(data-title);
@@ -105,18 +120,3 @@ const StyledEduRecords = styled.div`
     }
 `
 
-
-const Row = (props: EducationData) => {
-    return (
-        <tr key={props.trainingNum}>
-            <td data-title="受訓日期">{props.date}</td>
-            <td data-title="受訓名稱">{props.trainingName}</td>
-            <td data-title="訓練類型">{props.trainingType}</td>
-            <td data-title="訓練證號">{props.trainingNum}</td>
-            <td data-title="證照天數">{props.licenseDays}</td>
-            <td data-title="證照到期日">{props.licenseDueDate}</td>
-            <td data-title="成績">{props.grade}</td>
-            <td data-title="管理"><i className="fas fa-trash-can"></i></td>
-        </tr>
-    )
-}
