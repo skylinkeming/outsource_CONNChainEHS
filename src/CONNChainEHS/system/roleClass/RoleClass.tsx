@@ -54,11 +54,8 @@ function RoleClass() {
       function: Permission.CanEdit
     },
   ]);
-  const navigate = useNavigate();
 
-  const clickEdit = () => {
-    navigate("/system/roleEdit")
-  }
+
 
   return (
     <StlyedRoleClass>
@@ -100,7 +97,7 @@ function RoleClass() {
                   </tr>
                 </thead>
                 <tbody className="fs-4">
-                  {dataList.map((data, idx) => <Row key={idx} index={idx} role={{ ...data }} />)}
+                  {dataList.map((data, idx) => <Row key={idx} index={idx+1} role={{ ...data }} />)}
                 </tbody>
               </table>
             </div>
@@ -127,6 +124,13 @@ function RoleClass() {
 
 
 const Row = (props: { index: number; role: RoleData }) => {
+  const navigate = useNavigate();
+  
+  const clickEdit = () => {
+    navigate("/system/roleEdit")
+  }
+
+
   return (
     <tr>
       <td data-title="順序">{props.index}</td>
@@ -136,7 +140,7 @@ const Row = (props: { index: number; role: RoleData }) => {
       <td data-title="功能">
         {props.role.function === Permission.CanEdit ?
           <>
-            <button type="button" className="btn btn-warning me-3 fs-5" title="編輯">
+            <button type="button" className="btn btn-warning me-3 fs-5" title="編輯" onClick={clickEdit}>
               <i className="fas fa-pen"></i>  編輯
             </button>
             <i className="fas fa-trash-can fa-lg"></i>
