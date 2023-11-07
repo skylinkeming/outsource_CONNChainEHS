@@ -135,11 +135,16 @@ const Row = (props: { index: number; role: RoleData }) => {
       <td data-title="說明">{props.role.description}</td>
       <td data-title="功能">
         {props.role.function === Permission.CanEdit ?
-          <button type="button" className="btn btn-warning me-3 fs-5" title="編輯">
-            <i className="fas fa-pen"></i>  編輯
-          </button>
+          <>
+            <button type="button" className="btn btn-warning me-3 fs-5" title="編輯">
+              <i className="fas fa-pen"></i>  編輯
+            </button>
+            <i className="fas fa-trash-can fa-lg"></i>
+          </>
           :
-          <i className="fas fa-trash-can fa-lg"></i>
+          <button type="button" className="btn btn-gray me-3 fs-5 goDetail" title="編輯">
+            <i className="fas fa-file-lines"></i> 明細
+          </button>
         }
       </td>
     </tr>
@@ -148,49 +153,53 @@ const Row = (props: { index: number; role: RoleData }) => {
 
 const StlyedRoleClass = styled.div`
   padding-bottom:150px;
-    @media (max-width: 600px){
-        label {
-            width:200px;
-        }
-        .buttonPanel {
-            margin-top:10px;
-            display:flex;
-            justify-content: flex-end;
-        }
-        thead {
-            display:none;
-        }
-        tbody, td, tr {
-            display:block;
-            background: #fff !important;
-            box-shadow: inset 0 0 0 9999px white;
-
-        }
-        tr {
-            border: 1px solid #ccc;
-            margin-bottom: 10px;
-            background: #fff !important;
-        }
-        td {
-            background: #fff!important;
-            position:relative;
-            padding-left: 100px;
-            text-align:left;
-        }
-        td::before {
-            content: attr(data-title);
-            position: absolute;
-            top: 6px;
-            left: 6px;
-            width: 30%;
-            padding-right: 10px;
-            white-space: nowrap;
-            text-align: left;
-            font-weight: bold;
-            color: #1a1a1a;
-        }
-    
+  .fa-trash-can {
+    color: tomato;
+  }
+  @media (max-width: 600px){
+    label {
+        width:200px;
     }
+    .buttonPanel {
+        margin-top:10px;
+        display:flex;
+        justify-content: flex-end;
+    }
+    thead {
+        display:none;
+    }
+    tbody, td, tr {
+        display:block;
+        background: #fff !important;
+        box-shadow: inset 0 0 0 9999px white;
+
+    }
+    tr {
+        border: 1px solid #ccc;
+        margin-bottom: 10px;
+        background: #fff !important;
+    }
+    td {
+        background: #fff!important;
+        position:relative;
+        padding-left: 100px;
+        text-align:left;
+        min-height: 44px;
+    }
+    td::before {
+        content: attr(data-title);
+        position: absolute;
+        top: 6px;
+        left: 6px;
+        width: 30%;
+        padding-right: 10px;
+        white-space: nowrap;
+        text-align: left;
+        font-weight: bold;
+        color: #1a1a1a;
+    }
+
+  }
 `
 
 export default RoleClass;
