@@ -1,15 +1,17 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 import Dialog from '../../common/Dialog';
 import AddRole from './AddRole';
 import Footer from '../../layout/Footer';
+import { RoleAPI } from '../../../api/roleAPI';
 
 interface RoleData {
-  level: string;
+  editId:string;
+  roleLevelName:string;
   roleName: string;
-  description: string;
+  roleDescription: string;
   function: Permission;
 }
 
@@ -21,41 +23,51 @@ enum Permission {
 
 function RoleClass() {
   const { t, i18n } = useTranslation();
-  const [showAddPopup, setShowAddPopup] = useState(false);
+  const [showAddPopup, setShowAddPopup] = useState<boolean>(false);
   const [dataList, setDataList] = useState<Array<RoleData>>([
-    {
-      level: "階級一",
-      roleName: "總管理者",
-      description: "",
-      function: Permission.CanView
-    },
-    {
-      level: "階級二",
-      roleName: "環安人員",
-      description: "",
-      function: Permission.CanEdit
-    },
-    {
-      level: "階級三",
-      roleName: "單位管理人",
-      description: "",
-      function: Permission.CanEdit
-    },
-    {
-      level: "階級四",
-      roleName: "實驗室負責人",
-      description: "",
-      function: Permission.CanEdit
-    },
-    {
-      level: "階級四",
-      roleName: "實驗室管理人",
-      description: "",
-      function: Permission.CanEdit
-    },
+    // {
+    //   level: "階級一",
+    //   roleName: "總管理者",
+    //   description: "",
+    //   function: Permission.CanView
+    // },
+    // {
+    //   level: "階級二",
+    //   roleName: "環安人員",
+    //   description: "",
+    //   function: Permission.CanEdit
+    // },
+    // {
+    //   level: "階級三",
+    //   roleName: "單位管理人",
+    //   description: "",
+    //   function: Permission.CanEdit
+    // },
+    // {
+    //   level: "階級四",
+    //   roleName: "實驗室負責人",
+    //   description: "",
+    //   function: Permission.CanEdit
+    // },
+    // {
+    //   level: "階級四",
+    //   roleName: "實驗室管理人",
+    //   description: "",
+    //   function: Permission.CanEdit
+    // },
   ]);
 
-
+  useEffect(()=>{
+    RoleAPI.getRoleList({
+      loginRoleId:3,
+      loginUserId:"CLOUDT001",
+      loginRoleLevel:2,
+      langType:"zh_TW"
+    }).then(result=>{
+      console.log(result.results);
+      setDataList(result.results)
+    })
+  },[])
 
   return (
     <StlyedRoleClass>
@@ -97,7 +109,7 @@ function RoleClass() {
                   </tr>
                 </thead>
                 <tbody className="fs-4">
-                  {dataList.map((data, idx) => <Row key={idx} index={idx+1} role={{ ...data }} />)}
+                  {dataList.map((data, idx) => <Row key={data.editId+idx} index={idx+1} role={{ ...data }} />)}
                 </tbody>
               </table>
             </div>
@@ -134,9 +146,9 @@ const Row = (props: { index: number; role: RoleData }) => {
   return (
     <tr>
       <td data-title="順序">{props.index}</td>
-      <td data-title="階層">{props.role.level}</td>
+      <td data-title="階層">{props.role.roleLevelName}</td>
       <td data-title="角色名稱">{props.role.roleName}</td>
-      <td data-title="說明">{props.role.description}</td>
+      <td data-title="說明">{props.role.roleDescription}</td>
       <td data-title="功能">
         {props.role.function === Permission.CanEdit ?
           <>

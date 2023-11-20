@@ -13,7 +13,7 @@ export default function Dialog(props: { content: ReactElement; show: boolean; })
 }
 
 
-const StyledDialog = styled.div<{ show?: boolean; }>`
+const StyledDialog = styled.div<{ show: boolean; }>`
     background: rgba(0,0,0,0.5);
     position:fixed;
     z-index: 9999;
