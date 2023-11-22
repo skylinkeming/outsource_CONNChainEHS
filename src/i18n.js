@@ -1,13 +1,13 @@
 import i18n from 'i18next';
 import { initReactI18next } from "react-i18next";
-import translationEN from './locales/en/translation.json'
-import translationZH from './locales/zh/translation.json'
+import translationEN from './locales/en_US/translation.json'
+import translationZH from './locales/zh_TW/translation.json'
 
 const resources = {
-    en: {
+    en_US: {
         translation: translationEN,
     },
-    zh: {
+    zh_TW: {
         translation: translationZH,
     }
 }
@@ -15,6 +15,6 @@ const resources = {
 
 i18n.use(initReactI18next).init({
     resources,
-    lng: "zh",
-    fallbackLng: "en",
+    lng: "zh_TW",
+    fallbackLng: "en_US",
 });

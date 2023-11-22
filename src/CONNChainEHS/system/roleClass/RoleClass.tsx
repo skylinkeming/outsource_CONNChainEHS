@@ -8,11 +8,11 @@ import Footer from '../../layout/Footer';
 import { RoleAPI } from '../../../api/roleAPI';
 
 interface RoleData {
-  editId:string;
-  roleLevelName:string;
+  editId: string;
+  roleLevelName: string;
   roleName: string;
   roleDescription: string;
-  function: Permission;
+  permission: Permission;
 }
 
 enum Permission {
@@ -23,56 +23,56 @@ enum Permission {
 
 function RoleClass() {
   const { t, i18n } = useTranslation();
+  const [loginUser, setLoginUser] = useState<any>(null);
   const [showAddPopup, setShowAddPopup] = useState<boolean>(false);
-  const [dataList, setDataList] = useState<Array<RoleData>>([
-    // {
-    //   level: "階級一",
-    //   roleName: "總管理者",
-    //   description: "",
-    //   function: Permission.CanView
-    // },
-    // {
-    //   level: "階級二",
-    //   roleName: "環安人員",
-    //   description: "",
-    //   function: Permission.CanEdit
-    // },
-    // {
-    //   level: "階級三",
-    //   roleName: "單位管理人",
-    //   description: "",
-    //   function: Permission.CanEdit
-    // },
-    // {
-    //   level: "階級四",
-    //   roleName: "實驗室負責人",
-    //   description: "",
-    //   function: Permission.CanEdit
-    // },
-    // {
-    //   level: "階級四",
-    //   roleName: "實驗室管理人",
-    //   description: "",
-    //   function: Permission.CanEdit
-    // },
-  ]);
+  const [dataList, setDataList] = useState<Array<RoleData>>([]);
 
-  useEffect(()=>{
+  useEffect(() => {
+    if (!loginUser && localStorage.getItem("loginUser")) {
+      const user = JSON.parse(localStorage.getItem("loginUser")!)
+      console.log()
+      setLoginUser(user)
+    } else if (!!loginUser) {
+      fetchData();
+    }
+  }, [loginUser])
+
+  const fetchData = () => {
     RoleAPI.getRoleList({
-      loginRoleId:3,
-      loginUserId:"CLOUDT001",
-      loginRoleLevel:2,
-      langType:"zh_TW"
-    }).then(result=>{
+      loginRoleId: 3,
+      loginUserId: "CLOUDT001",
+      loginRoleLevel: 2,
+      langType: i18n.language
+    }).then(result => {
       console.log(result.results);
-      setDataList(result.results)
+      if (result) {
+        result.results.forEach((roleData: any) => {
+          if (roleData.roleLevel >= loginUser.loginRoleLevel) {
+            roleData.permission = Permission.CanEdit;
+          } else {
+            roleData.permission = Permission.CanView;
+          }
+        })
+        setDataList(result.results)
+      }
     })
-  },[])
+  }
 
   return (
     <StlyedRoleClass>
       <div className="d-flex flex-column p-0" id="content">
-        <Dialog content={<AddRole clickCloseBtn={() => { setShowAddPopup(false) }} />} show={showAddPopup} />
+        <Dialog
+          content={
+            <AddRole
+              clickCloseBtn={() => { setShowAddPopup(false) }}
+              onAddSuccess={() => {
+                setShowAddPopup(false)
+                fetchData();
+              }}
+            />
+          }
+          show={showAddPopup}
+        />
         {/* BEGIN scrollbar */}
         <div className="app-content-padding flex-grow-1">
           {/* BEGIN breadcrumb */}
@@ -109,7 +109,7 @@ function RoleClass() {
                   </tr>
                 </thead>
                 <tbody className="fs-4">
-                  {dataList.map((data, idx) => <Row key={data.editId+idx} index={idx+1} role={{ ...data }} />)}
+                  {dataList.map((data, idx) => <Row key={data.editId + idx} index={idx + 1} role={{ ...data }} />)}
                 </tbody>
               </table>
             </div>
@@ -137,7 +137,7 @@ function RoleClass() {
 
 const Row = (props: { index: number; role: RoleData }) => {
   const navigate = useNavigate();
-  
+
   const clickEdit = () => {
     navigate("/system/roleEdit")
   }
@@ -150,7 +150,7 @@ const Row = (props: { index: number; role: RoleData }) => {
       <td data-title="角色名稱">{props.role.roleName}</td>
       <td data-title="說明">{props.role.roleDescription}</td>
       <td data-title="功能">
-        {props.role.function === Permission.CanEdit ?
+        {props.role.permission === Permission.CanEdit ?
           <>
             <button type="button" className="btn btn-warning me-3 fs-5" title="編輯" onClick={clickEdit}>
               <i className="fas fa-pen"></i>  編輯

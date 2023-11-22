@@ -1,7 +1,81 @@
+import { useEffect, useState } from "react"
 import styled from "styled-components"
+import { RoleAPI } from "../../../api/roleAPI"
+import { useTranslation } from "react-i18next";
+
+interface RoleLevelData {
+    description: string;
+    label: string;
+    selected: boolean;
+    value: string;
+}
 
 
-export default function AddRole(props:{clickCloseBtn:()=>void}) {
+export default function AddRole(props: { clickCloseBtn: () => void; onAddSuccess: () => void }) {
+    const [loginUser, setLoginUser] = useState<any>(null);
+    const [roleList, setRoleList] = useState<Array<RoleLevelData>>([]);
+    const { i18n } = useTranslation();
+    const [editValues, setEditValues] = useState({
+        roleLevelValue: "",
+        roleName: "",
+        roleDesc: ""
+    });
+
+
+    useEffect(() => {
+        if (localStorage.getItem("loginUser")) {
+            const user = JSON.parse(localStorage.getItem("loginUser")!)
+            setLoginUser(user)
+            RoleAPI.getRoleLevelSelectList({
+                loginRoleId: user.loginRoleId,
+                loginRoleLevel: user.loginRoleLevel,
+                loginUserId: user.loginUserId,
+                langType: i18n.language
+            }).then(result => {
+                console.log(result);
+                if (result) {
+                    setRoleList(result.results);
+                }
+            }).catch(err => {
+                alert(err);
+            })
+
+        }
+    }, [])
+
+    const addRole = () => {
+        if (!loginUser) {
+            return;
+        }
+        if (!editValues.roleName) {
+            alert("請輸入角色名稱");
+            return;
+        }
+        if (!editValues.roleLevelValue) {
+            alert("請選擇角色階層");
+            return;
+        }
+        RoleAPI.addRole({
+            loginRoleId: loginUser.loginRoleId,
+            loginRoleLevel: loginUser.loginRoleLevel,
+            loginUserId: loginUser.loginUserId,
+            langType: i18n.language,
+            roleName: editValues.roleName,
+            roleDescription: editValues.roleDesc,
+            roleLevel: parseInt(editValues.roleLevelValue)
+        }).then(result => {
+            if (result.status !== 'Success') {
+                alert(result.message)
+            } else {
+                props.onAddSuccess()
+            }
+        }).catch(err => {
+            debugger;
+            alert(err)
+        })
+
+    }
+
     return (
         <StyledAddRole>
             <div className="addRole">
@@ -16,11 +90,18 @@ export default function AddRole(props:{clickCloseBtn:()=>void}) {
                                 <label htmlFor="" className="fw-bold mb-1">請選擇角色階層：
                                     <span className="text-danger">*</span>
                                 </label>
-                                <select name="" id="" className="form-select form-select-lg" data-parsley-required="true">
+                                <select value={editValues.roleLevelValue} name="" id="" className="form-select form-select-lg" data-parsley-required="true" onChange={(e) => {
+                                    setEditValues({
+                                        ...editValues,
+                                        roleLevelValue: e.target.value
+                                    });
+                                }}>
                                     <option value="">請選擇</option>
-                                    <option value="01">階級二</option>
-                                    <option value="02">階級三</option>
-                                    <option value="03">階級四</option>
+                                    {roleList.length > 0 && roleList.map(role => {
+                                        return <option value={role.value}>{role.label}</option>
+                                    })
+
+                                    }
                                 </select>
                             </div>
                         </div>
@@ -29,22 +110,34 @@ export default function AddRole(props:{clickCloseBtn:()=>void}) {
                                 <label htmlFor="" className="fw-bold mb-1">請輸入角色名稱：
                                     <span className="text-danger">*</span>
                                 </label>
-                                <input type="text" className="form-control form-control-lg" data-parsley-required="true"
-                                    placeholder="請輸入角色名稱" />
+                                <input value={editValues.roleName} type="text" className="form-control form-control-lg" data-parsley-required="true"
+                                    placeholder="請輸入角色名稱" onChange={(e) => {
+                                        setEditValues({
+                                            ...editValues,
+                                            roleName: e.target.value
+                                        });
+                                    }} />
                             </div>
                         </div>
                         <div className="row mb-4 justify-content-center">
                             <div className="col-md-10">
                                 <label htmlFor="" className="fw-bold mb-1">請輸入角色說明：</label>
-                                <input type="text" className="form-control form-control-lg" placeholder="請輸入角色說明" />
+                                <input value={editValues.roleDesc} type="text" className="form-control form-control-lg" placeholder="請輸入角色說明"
+                                    onChange={(e) => {
+                                        setEditValues({
+                                            ...editValues,
+                                            roleDesc: e.target.value
+                                        });
+                                    }}
+                                />
                             </div>
                         </div>
                     </div>
                     <div className="addRole-footer">
-                        <button className="btn btn-white" aria-hidden="true" onClick={props.clickCloseBtn}>關閉</button>
-                        <button type="submit" className="btn btn-purple">
-                            <i className="fas fa-cubes"></i> 新增角色
-                        </button>
+                        <div className="btn btn-white" aria-hidden="true" onClick={props.clickCloseBtn}>關閉</div>
+                        <div className="btn btn-purple" onClick={addRole}>
+                            <i className="fas fa-cubes" /> 新增角色
+                        </div>
                     </div>
                 </form>
             </div>
