@@ -46,5 +46,25 @@ export const RoleAPI = {
             })
         }).then(res=>res.json())
     },
+    deleteRole:async (parms:{
+        loginUserId:string, 
+        loginRoleLevel:number,
+        loginRoleId:number,
+        langType:string,    
+        roleId:string,
+    })=>{
+        return fetch(Config.apiAddress+'/role/del',{
+            method: "POST",
+            headers: {  
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+            },
+            body: JSON.stringify({
+                ...parms
+            })
+        }).then(res=>res.json())
+    },
+
+   
 
 }

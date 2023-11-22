@@ -6,9 +6,11 @@ import Dialog from '../../common/Dialog';
 import AddRole from './AddRole';
 import Footer from '../../layout/Footer';
 import { RoleAPI } from '../../../api/roleAPI';
+import useLoginUser from '../../hooks/useLoginUser';
 
 interface RoleData {
   editId: string;
+  roleId: string;
   roleLevelName: string;
   roleName: string;
   roleDescription: string;
@@ -44,7 +46,6 @@ function RoleClass() {
       loginRoleLevel: 2,
       langType: i18n.language
     }).then(result => {
-      console.log(result.results);
       if (result) {
         result.results.forEach((roleData: any) => {
           if (roleData.roleLevel >= loginUser.loginRoleLevel) {
@@ -109,7 +110,16 @@ function RoleClass() {
                   </tr>
                 </thead>
                 <tbody className="fs-4">
-                  {dataList.map((data, idx) => <Row key={data.editId + idx} index={idx + 1} role={{ ...data }} />)}
+                  {dataList.map((data, idx) => 
+                    <Row 
+                      key={data.editId + idx} 
+                      index={idx + 1} 
+                      role={{ ...data }} 
+                      onDeleteSuccess={()=>{
+                        fetchData();
+                      }}
+                    />
+                  )}
                 </tbody>
               </table>
             </div>
@@ -135,13 +145,37 @@ function RoleClass() {
 }
 
 
-const Row = (props: { index: number; role: RoleData }) => {
+const Row = (props: { index: number; role: RoleData; onDeleteSuccess:()=>void }) => {
   const navigate = useNavigate();
+  const loginUser = useLoginUser();
+  const { i18n } = useTranslation();
+
 
   const clickEdit = () => {
     navigate("/system/roleEdit")
   }
+  const clickDelete = () => {
+    if (loginUser) {
+      RoleAPI.deleteRole(
+        {
+          loginUserId: loginUser.loginUserId,
+          loginRoleLevel: loginUser.loginRoleLevel,
+          loginRoleId: parseInt(loginUser.loginRoleId),
+          langType: i18n.language,
+          roleId: props.role.roleId
+        }
+      ).then(result => {
+        console.log(result);
+        if (result.status !== 'Success') {
+          alert(result.message);
+        } else {
+          props.onDeleteSuccess()
+        }
+      }).catch(err => {
 
+      })
+    }
+  }
 
   return (
     <tr>
@@ -155,7 +189,7 @@ const Row = (props: { index: number; role: RoleData }) => {
             <button type="button" className="btn btn-warning me-3 fs-5" title="編輯" onClick={clickEdit}>
               <i className="fas fa-pen"></i>  編輯
             </button>
-            <i className="fas fa-trash-can fa-lg"></i>
+            <i className="fas fa-trash-can fa-lg" onClick={clickDelete}></i>
           </>
           :
           <button type="button" className="btn btn-gray me-3 fs-5 goDetail" title="編輯">
