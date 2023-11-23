@@ -99,5 +99,21 @@ export const RoleAPI = {
             })
         }).then(res=>res.json())
     },
-
+    getFuncGroupList:async (parms:{
+        loginUserId:string, 
+        loginRoleLevel:number,
+        loginRoleId:string,
+        langType:string,    
+    })=>{
+        return fetch(Config.apiAddress+'/func/list',{
+            method: "POST",
+            headers: {  
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+            },
+            body: JSON.stringify({
+                ...parms
+            })
+        }).then(res=>res.json())
+    },
 }

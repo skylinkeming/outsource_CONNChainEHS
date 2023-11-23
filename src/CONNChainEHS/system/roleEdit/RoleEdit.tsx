@@ -21,9 +21,12 @@ interface RoleDetail {
 function RoleEdit() {
   const { t } = useTranslation();
   const [roleDetail, setRoleDetail] = useState<RoleDetail>();
+  const [groupData, setGroupData] = useState<any>();
+  const [systemFuncGroup, setSystemFuncGroup] = useState<any>();
   const loginUser = useLoginUser();
 
   useEffect(() => {
+    debugger;
     if (loginUser) {
       let params = new URL((window.location.href).toString()).searchParams;
       let roleId = params.get("roleId"); // is the string "Jonathan Smith".
@@ -55,29 +58,87 @@ function RoleEdit() {
         console.log(result);
         if (result.status === 'Success') {
           // setRoleDetail(result.results);
-          let data = [];
-          // result.results.map(data=>{
+          let targetGroupData = result.results.map((group: any) => {
+            return {
+              key: group.groupId,
+              title: group.groupName,
+              // children: []
+            }
+          })
+          setGroupData(targetGroupData)
+        } else {
+          alert(result.message)
+        }
+      })
 
+      RoleAPI.getFuncGroupList({
+        loginUserId: loginUser.loginUserId,
+        loginRoleLevel: loginUser.loginRoleLevel,
+        loginRoleId: loginUser.loginRoleId,
+        langType: loginUser.langType,
+      }).then(result => {
+        console.log(result);
+        if (result.status === 'Success') {
+          // setRoleDetail(result.results);
+          let data = getTree(result.results);
+          // let targetGroupData = result.results.map((group: any) => {
+          //   let parentGroup = {
+          //     key: group.funcId,
+          //     title: group.funcName,
+          //     children: []
+          //   }
+          //   if (group.subMenuList.length) {
+          //     parentGroup.children = group.subMenuList.map((subGroup: any) => {
+          //       return {
+          //         key: subGroup.funcId,
+          //         title: subGroup.funcName,
+          //         children: []
+          //       }
+          //     });
+          //   }
+          //   return parentGroup;
           // })
-          // {
-          //         key: '0-0',
-          //         title: '系統管理與設定',
-          //         children: [
-          //             { key: '0-0-0', title: '單位階層管理', children: [{ key: '0-0-0-1', title: '新增' }, { key: '0-0-0-2', title: '刪除' }, { key: '0-0-0-3', title: '修改' }] },
-          //             { key: '0-0-1', title: '角色階層管理', },
-          //             { key: '0-0-2', title: '功能群組管理', },
-          //             { key: '0-0-3', title: '系統功能查詢', },
-          //             { key: '0-0-4', title: '停止運作設定', },
-
-          //         ],
-          //     },
-
+          console.log(data);
+          setSystemFuncGroup(data)
+          // setSystemFuncGroup(targetGroupData)
         } else {
           alert(result.message)
         }
       })
     }
   }, [])
+
+  interface FuncData {
+    funcId: string;
+    funcName: string;
+    subMenuList: Array<FuncData>
+  }
+
+  const getTree = (dataList: Array<FuncData>) => {
+    if (!dataList.length) {
+      return []
+    }
+
+    let targetGroupData = dataList.map((group: FuncData) => {
+      let parentGroup: any = {
+        key: group.funcId,
+        title: group.funcName,
+        children: []
+      }
+      if (group.subMenuList.length) {
+        parentGroup.children = group.subMenuList.map((subGroup: any) => {
+          return {
+            key: subGroup.funcId,
+            title: subGroup.funcName,
+            children: getTree(subGroup.subMenuList)
+          }
+        });
+
+      }
+      return parentGroup;
+    })
+    return targetGroupData;
+  }
 
   return (
     <RoleEditWrap>
@@ -140,7 +201,8 @@ function RoleEdit() {
                         <li>實驗室負責人</li>
                       </ul>
                     </div> */}
-                      <RCTree treeData={functionGropData} />
+                      {/* <RCTree treeData={functionGropData} /> */}
+                      <RCTree treeData={groupData} />
 
                     </div>
                   </div>
@@ -149,7 +211,8 @@ function RoleEdit() {
                   <div className="panel">
                     <h4 className="panel-heading bg-orange-700 text-white justify-content-center">系統功能</h4>
                     <div className="panel-body">
-                      <RCTree treeData={SystemData} />
+                      {/* <RCTree treeData={SystemData} /> */}
+                      <RCTree treeData={systemFuncGroup} />
 
                       {/* <div className="jstree-checkable fs-5">
                       <ul>
