@@ -110,12 +110,12 @@ function RoleClass() {
                   </tr>
                 </thead>
                 <tbody className="fs-4">
-                  {dataList.map((data, idx) => 
-                    <Row 
-                      key={data.editId + idx} 
-                      index={idx + 1} 
-                      role={{ ...data }} 
-                      onDeleteSuccess={()=>{
+                  {dataList.map((data, idx) =>
+                    <Row
+                      key={data.editId + idx}
+                      index={idx + 1}
+                      role={{ ...data }}
+                      onDeleteSuccess={() => {
                         fetchData();
                       }}
                     />
@@ -145,14 +145,13 @@ function RoleClass() {
 }
 
 
-const Row = (props: { index: number; role: RoleData; onDeleteSuccess:()=>void }) => {
+const Row = (props: { index: number; role: RoleData; onDeleteSuccess: () => void }) => {
   const navigate = useNavigate();
   const loginUser = useLoginUser();
-  const { i18n } = useTranslation();
 
 
   const clickEdit = () => {
-    navigate("/system/roleEdit")
+    navigate("/system/roleEdit?roleId=" + props.role.roleId);
   }
   const clickDelete = () => {
     if (loginUser) {
@@ -161,7 +160,7 @@ const Row = (props: { index: number; role: RoleData; onDeleteSuccess:()=>void })
           loginUserId: loginUser.loginUserId,
           loginRoleLevel: loginUser.loginRoleLevel,
           loginRoleId: parseInt(loginUser.loginRoleId),
-          langType: i18n.language,
+          langType: loginUser.langType,
           roleId: props.role.roleId
         }
       ).then(result => {

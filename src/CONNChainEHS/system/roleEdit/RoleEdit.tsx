@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import "rc-tree/assets/index.css"
 import { useTranslation } from 'react-i18next';
@@ -8,9 +8,76 @@ import { useTranslation } from 'react-i18next';
 import RCTree from './RCTree';
 import { SystemData, functionGropData } from './data';
 import Footer from '../../layout/Footer';
+import useLoginUser from '../../hooks/useLoginUser';
+import { RoleAPI } from '../../../api/roleAPI';
+
+interface RoleDetail {
+  roleLevelName: string;
+  roleName: string;
+  roleDescription: string;
+}
+
 
 function RoleEdit() {
   const { t } = useTranslation();
+  const [roleDetail, setRoleDetail] = useState<RoleDetail>();
+  const loginUser = useLoginUser();
+
+  useEffect(() => {
+    if (loginUser) {
+      let params = new URL((window.location.href).toString()).searchParams;
+      let roleId = params.get("roleId"); // is the string "Jonathan Smith".
+
+      if (!roleId) {
+        return;
+      }
+      console.log(roleId)
+      RoleAPI.getRoleDetail({
+        loginUserId: loginUser.loginUserId,
+        loginRoleLevel: loginUser.loginRoleLevel,
+        loginRoleId: loginUser.loginRoleId,
+        langType: loginUser.langType,
+        roleId: roleId!,
+      }).then(result => {
+        if (result.status === 'Success') {
+          setRoleDetail(result.results);
+        } else {
+          alert(result.message)
+        }
+      })
+
+      RoleAPI.getGroupList({
+        loginUserId: loginUser.loginUserId,
+        loginRoleLevel: loginUser.loginRoleLevel,
+        loginRoleId: loginUser.loginRoleId,
+        langType: loginUser.langType,
+      }).then(result => {
+        console.log(result);
+        if (result.status === 'Success') {
+          // setRoleDetail(result.results);
+          let data = [];
+          // result.results.map(data=>{
+
+          // })
+          // {
+          //         key: '0-0',
+          //         title: '系統管理與設定',
+          //         children: [
+          //             { key: '0-0-0', title: '單位階層管理', children: [{ key: '0-0-0-1', title: '新增' }, { key: '0-0-0-2', title: '刪除' }, { key: '0-0-0-3', title: '修改' }] },
+          //             { key: '0-0-1', title: '角色階層管理', },
+          //             { key: '0-0-2', title: '功能群組管理', },
+          //             { key: '0-0-3', title: '系統功能查詢', },
+          //             { key: '0-0-4', title: '停止運作設定', },
+
+          //         ],
+          //     },
+
+        } else {
+          alert(result.message)
+        }
+      })
+    }
+  }, [])
 
   return (
     <RoleEditWrap>
@@ -42,14 +109,14 @@ function RoleEdit() {
           <div className="card mt-3">
             <div className="card-body row align-items-center fw-bold fs-4 py-4">
               <div className="col-xl-1 text-end">{t("table.title.role.level") + "："}</div>
-              <div className="col-xl-1"><span id="roleClass">階級二</span></div>
+              <div className="col-xl-1"><span id="roleClass">{roleDetail?.roleLevelName}</span></div>
               <div className="col-xl-1 text-end">{t('table.title.role.name') + "："}</div>
               <div className="col-xl-2">
-                <span className="roleName">總管理者</span>
+                <span className="roleName">{roleDetail?.roleName}</span>
               </div>
               <div className="col-xl-1 text-end">說明：</div>
               <div className="col-xl-4">
-                <span className="roleDescript">總管理者</span>
+                <span className="roleDescript">{roleDetail?.roleDescription}</span>
               </div>
               <div className="col-xl-2 d-grid">
                 <button type="button" className="btn btn-warning me-3 fs-5 modify-btn" title="修改名稱與說明">修改名稱與說明</button>
@@ -151,7 +218,7 @@ function RoleEdit() {
         </div>
         {/* END scrollbar */}
         {/* BEGIN #footer */}
-        <Footer/>
+        <Footer />
         {/* END #footer */}
       </div>
     </RoleEditWrap>
