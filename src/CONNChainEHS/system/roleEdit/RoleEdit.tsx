@@ -10,23 +10,42 @@ import { SystemData, functionGropData } from './data';
 import Footer from '../../layout/Footer';
 import useLoginUser from '../../hooks/useLoginUser';
 import { RoleAPI } from '../../../api/roleAPI';
+import TopPanel from './TopPanel';
 
-interface RoleDetail {
+export interface RoleDetail {
   roleLevelName: string;
+  roleLevel: number;
   roleName: string;
   roleDescription: string;
+  roleId: string;
 }
 
+interface FuncData {
+  funcId: string;
+  funcName: string;
+  disabled: boolean;
+  hasPermission: boolean;
+  checked: boolean;
+  subMenuList: Array<FuncData>
+}
 
 function RoleEdit() {
   const { t } = useTranslation();
   const [roleDetail, setRoleDetail] = useState<RoleDetail>();
-  const [groupData, setGroupData] = useState<any>();
-  const [systemFuncGroup, setSystemFuncGroup] = useState<any>();
+  const [groupData, setGroupData] = useState<Array<any>>();
+  const [systemFuncGroup, setSystemFuncGroup] = useState<Array<any>>();
+  const [selectedGroups, setSelectedGroups] = useState<Array<string>>();
+  const [selectedFuncs, setSelectedFuncs] = useState<Array<string>>();
+
+
   const loginUser = useLoginUser();
 
   useEffect(() => {
-    debugger;
+    initData()
+  }, [loginUser])
+
+
+  const initData = () => {
     if (loginUser) {
       let params = new URL((window.location.href).toString()).searchParams;
       let roleId = params.get("roleId"); // is the string "Jonathan Smith".
@@ -34,7 +53,6 @@ function RoleEdit() {
       if (!roleId) {
         return;
       }
-      console.log(roleId)
       RoleAPI.getRoleDetail({
         loginUserId: loginUser.loginUserId,
         loginRoleLevel: loginUser.loginRoleLevel,
@@ -44,6 +62,9 @@ function RoleEdit() {
       }).then(result => {
         if (result.status === 'Success') {
           setRoleDetail(result.results);
+          // setSelectedFuncs(['d7', 'f41'])
+          setSelectedFuncs(result.results.objFuncId)
+          console.log(result.results)
         } else {
           alert(result.message)
         }
@@ -65,6 +86,10 @@ function RoleEdit() {
               // children: []
             }
           })
+          targetGroupData.unshift({
+            key: "all",
+            title: "全部"
+          })
           setGroupData(targetGroupData)
         } else {
           alert(result.message)
@@ -79,43 +104,25 @@ function RoleEdit() {
       }).then(result => {
         console.log(result);
         if (result.status === 'Success') {
-          // setRoleDetail(result.results);
-          let data = getTree(result.results);
-          // let targetGroupData = result.results.map((group: any) => {
-          //   let parentGroup = {
-          //     key: group.funcId,
-          //     title: group.funcName,
-          //     children: []
-          //   }
-          //   if (group.subMenuList.length) {
-          //     parentGroup.children = group.subMenuList.map((subGroup: any) => {
-          //       return {
-          //         key: subGroup.funcId,
-          //         title: subGroup.funcName,
-          //         children: []
-          //       }
-          //     });
-          //   }
-          //   return parentGroup;
-          // })
-          console.log(data);
+          let data = getFuncTree(result.results);
+          let selectedFuncs = result.results.filter((data: any) => {
+            if (data.checked) {
+              return data.funcId;
+            }
+          });
+          console.log(selectedFuncs)
+
           setSystemFuncGroup(data)
-          // setSystemFuncGroup(targetGroupData)
         } else {
           alert(result.message)
         }
       })
     }
-  }, [])
-
-  interface FuncData {
-    funcId: string;
-    funcName: string;
-    subMenuList: Array<FuncData>
   }
 
-  const getTree = (dataList: Array<FuncData>) => {
-    if (!dataList.length) {
+
+  const getFuncTree = (dataList: Array<FuncData>) => {
+    if (!dataList.length || !dataList) {
       return []
     }
 
@@ -123,14 +130,18 @@ function RoleEdit() {
       let parentGroup: any = {
         key: group.funcId,
         title: group.funcName,
-        children: []
+        checkable: !group.disabled,
+        // disabled: !group.hasPermission,
+        children: [],
+
       }
       if (group.subMenuList.length) {
         parentGroup.children = group.subMenuList.map((subGroup: any) => {
           return {
             key: subGroup.funcId,
             title: subGroup.funcName,
-            children: getTree(subGroup.subMenuList)
+            // disabled: !group.hasPermission,
+            children: getFuncTree(subGroup.subMenuList)
           }
         });
 
@@ -167,23 +178,7 @@ function RoleEdit() {
           </button>
 
           {/* 階層名稱說明 */}
-          <div className="card mt-3">
-            <div className="card-body row align-items-center fw-bold fs-4 py-4">
-              <div className="col-xl-1 text-end">{t("table.title.role.level") + "："}</div>
-              <div className="col-xl-1"><span id="roleClass">{roleDetail?.roleLevelName}</span></div>
-              <div className="col-xl-1 text-end">{t('table.title.role.name') + "："}</div>
-              <div className="col-xl-2">
-                <span className="roleName">{roleDetail?.roleName}</span>
-              </div>
-              <div className="col-xl-1 text-end">說明：</div>
-              <div className="col-xl-4">
-                <span className="roleDescript">{roleDetail?.roleDescription}</span>
-              </div>
-              <div className="col-xl-2 d-grid">
-                <button type="button" className="btn btn-warning me-3 fs-5 modify-btn" title="修改名稱與說明">修改名稱與說明</button>
-              </div>
-            </div>
-          </div>
+          <TopPanel roleDetail={roleDetail} onEditSuccess={() => { initData() }} />
           {/* 綁定功能 */}
           <div className="card mt-3">
             <div className="card-body align-items-center p-4">
@@ -194,15 +189,13 @@ function RoleEdit() {
                   <div className="panel">
                     <h4 className="panel-heading bg-orange-700 text-white justify-content-center">功能群組</h4>
                     <div className="panel-body">
-                      {/* <div className="jstree-checkable fs-5">
-                      <ul>
-                        <li>全部</li>
-                        <li>環安人員</li>
-                        <li>實驗室負責人</li>
-                      </ul>
-                    </div> */}
-                      {/* <RCTree treeData={functionGropData} /> */}
-                      <RCTree treeData={groupData} />
+                      <RCTree
+                        treeData={groupData}
+                        keys={selectedGroups}
+                        onCheckKeysChange={(checkedKeys: Array<string>) => {
+                          setSelectedGroups(checkedKeys);
+                        }}
+                      />
 
                     </div>
                   </div>
@@ -211,59 +204,13 @@ function RoleEdit() {
                   <div className="panel">
                     <h4 className="panel-heading bg-orange-700 text-white justify-content-center">系統功能</h4>
                     <div className="panel-body">
-                      {/* <RCTree treeData={SystemData} /> */}
-                      <RCTree treeData={systemFuncGroup} />
-
-                      {/* <div className="jstree-checkable fs-5">
-                      <ul>
-                        <li data-jstree='{"opened":true}'>
-                          系統管理與設定
-                          <ul>
-                            <li data-jstree='{"opened":true}'>單位階層管理
-                              <ul>
-                                <li>新增</li>
-                                <li>刪除</li>
-                                <li>修改</li>
-                              </ul>
-                            </li>
-                            <li>角色階層管理</li>
-                            <li>功能群組管理</li>
-                            <li>系統功能查詢</li>
-                            <li>停止運作設定</li>
-                          </ul>
-                        </li>
-                        <li data-jstree='{"opened":true}'>
-                          單位與人員管理
-                          <ul>
-                            <li>單位管理</li>
-                            <li>區域管理</li>
-                            <li>建築物管理</li>
-                            <li>實驗室管理</li>
-                            <li>人員管理</li>
-                          </ul>
-                        </li>
-                        <li data-jstree='{"opened":true}'>
-                          簽核管理
-                          <ul>
-                            <li>化學品採購/異動</li>
-                            <li>實驗室申請/異動</li>
-                          </ul>
-                        </li>
-                        <li data-jstree='{"opened":true}'>
-                          化學品管理
-                          <ul>
-                            <li>化學品基本資訊</li>
-                            <li>化學品採購申請</li>
-                          </ul>
-                        </li>
-                        <li data-jstree='{"opened":true, "disabled" : true}'>
-                          職業安全衛生管理
-                        </li>
-                        <li data-jstree='{"opened":true, "disabled" : true}'>
-                          教育訓練管理
-                        </li>
-                      </ul>
-                    </div> */}
+                      {!!systemFuncGroup && <RCTree
+                        treeData={systemFuncGroup}
+                        keys={selectedFuncs}
+                        onCheckKeysChange={(checkedKeys: Array<string>) => {
+                          setSelectedFuncs(checkedKeys);
+                        }}
+                      />}
                     </div>
                   </div>
                 </div>
@@ -292,12 +239,8 @@ function RoleEdit() {
 
 const RoleEditWrap = styled.div`
   padding-bottom:150px;
-  .jstree .jstree-container-ul .jstree-node.jstree-open .jstree-anchor.jstree-clicked>.fa-folder:before {
-    color: rgb(255, 123, 0);
-  }
-
-  .jstree .jstree-container-ul .jstree-node.jstree-open .jstree-anchor>.fa-folder:before {
-    color: orange;
+  .nowrap {
+    white-space:nowrap;
   }
 `
 

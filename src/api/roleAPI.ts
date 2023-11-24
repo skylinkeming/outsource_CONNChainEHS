@@ -46,6 +46,27 @@ export const RoleAPI = {
             })
         }).then(res=>res.json())
     },
+    editRole:async (parms:{
+        loginUserId:string, 
+        loginRoleLevel:number,
+        loginRoleId:number,
+        langType:string,    
+        roleName:string,
+        roleDescription:string,
+        roleLevel:number,
+        roleId:string
+    })=>{
+        return fetch(Config.apiAddress+'/role/edit',{
+            method: "POST",
+            headers: {  
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+            },
+            body: JSON.stringify({
+                ...parms
+            })
+        }).then(res=>res.json())
+    },
     deleteRole:async (parms:{
         loginUserId:string, 
         loginRoleLevel:number,
@@ -89,6 +110,24 @@ export const RoleAPI = {
         langType:string,    
     })=>{
         return fetch(Config.apiAddress+'/group/list',{
+            method: "POST",
+            headers: {  
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+            },
+            body: JSON.stringify({
+                ...parms
+            })
+        }).then(res=>res.json())
+    },
+    getGroupDetail:async (parms:{
+        loginUserId:string, 
+        loginRoleLevel:number,
+        loginRoleId:string,
+        langType:string, 
+        groupId:string   
+    })=>{
+        return fetch(Config.apiAddress+'/group/detail',{
             method: "POST",
             headers: {  
                 "Content-Type": "application/json",
