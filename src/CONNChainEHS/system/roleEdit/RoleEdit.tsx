@@ -105,13 +105,6 @@ function RoleEdit() {
         console.log(result);
         if (result.status === 'Success') {
           let data = getFuncTree(result.results);
-          // let selectedFuncs = result.results.filter((data: any) => {
-          //   if (data.checked) {
-          //     return data.funcId;
-          //   }
-          // });
-          // console.log(selectedFuncs)
-
           setSystemFuncGroup(data)
         } else {
           alert(result.message)
@@ -175,6 +168,28 @@ function RoleEdit() {
     })
   }
 
+  const saveRoleFuncs = () => {
+    if (loginUser) {
+      RoleAPI.saveRoleFuncs({
+        loginUserId: loginUser!.loginUserId,
+        loginRoleLevel: loginUser!.loginRoleLevel,
+        loginRoleId: loginUser!.loginRoleId,
+        langType: loginUser!.langType,
+        roleId: roleDetail!.roleId!,
+        objFuncId: selectedFuncs
+      }).then(result => {
+        if (result.status === 'Success') {
+          console.log(result);
+        } else {
+          alert(result.message)
+        }
+      }).catch(err => {
+        alert(err)
+      })
+
+    }
+  }
+
   return (
     <RoleEditWrap>
       <div className="d-flex flex-column p-0" id="content">
@@ -207,7 +222,7 @@ function RoleEdit() {
           <div className="card mt-3">
             <div className="card-body align-items-center p-4">
               <h3 className="d-inline me-3">請選擇此角色要綁定的功能</h3>
-              <button type="button" className="btn btn-success fs-5"><i className="fas fa-floppy-disk"></i> 儲存角色功能設定</button>
+              <button type="button" className="btn btn-success fs-5" onClick={saveRoleFuncs}><i className="fas fa-floppy-disk"></i> 儲存角色功能設定</button>
               <div className="row justify-content-around mt-5">
                 <div className="col-lg-4">
                   <div className="panel">
@@ -243,7 +258,7 @@ function RoleEdit() {
               </div>
               <div className="row justify-content-center mb-3">
                 <div className="col-md-3 d-grid">
-                  <button type="button" className="btn btn-success fs-5">
+                  <button type="button" className="btn btn-success fs-5" onClick={saveRoleFuncs}>
                     <i className="fas fa-floppy-disk"></i> 儲存角色功能設定
                   </button>
                 </div>

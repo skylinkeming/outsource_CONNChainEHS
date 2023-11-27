@@ -155,4 +155,23 @@ export const RoleAPI = {
             })
         }).then(res=>res.json())
     },
+    saveRoleFuncs:async (parms:{
+        loginUserId:string, 
+        loginRoleLevel:number,
+        loginRoleId:string,
+        langType:string,  
+        roleId:string,
+        objFuncId:string[]
+    })=>{
+        return fetch(Config.apiAddress+'/objfunc/edit',{
+            method: "POST",
+            headers: {  
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+            },
+            body: JSON.stringify({
+                ...parms
+            })
+        }).then(res=>res.json())
+    },
 }
