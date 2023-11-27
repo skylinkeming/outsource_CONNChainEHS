@@ -32,10 +32,10 @@ interface FuncData {
 function RoleEdit() {
   const { t } = useTranslation();
   const [roleDetail, setRoleDetail] = useState<RoleDetail>();
-  const [groupData, setGroupData] = useState<Array<any>>();
-  const [systemFuncGroup, setSystemFuncGroup] = useState<Array<any>>();
-  const [selectedGroups, setSelectedGroups] = useState<Array<string>>();
-  const [selectedFuncs, setSelectedFuncs] = useState<Array<string>>();
+  const [groupData, setGroupData] = useState<Array<any>>([]);
+  const [systemFuncGroup, setSystemFuncGroup] = useState<Array<any>>([]);
+  const [selectedGroups, setSelectedGroups] = useState<Array<string>>([]);
+  const [selectedFuncs, setSelectedFuncs] = useState<Array<string>>([]);
 
 
   const loginUser = useLoginUser();
@@ -105,12 +105,12 @@ function RoleEdit() {
         console.log(result);
         if (result.status === 'Success') {
           let data = getFuncTree(result.results);
-          let selectedFuncs = result.results.filter((data: any) => {
-            if (data.checked) {
-              return data.funcId;
-            }
-          });
-          console.log(selectedFuncs)
+          // let selectedFuncs = result.results.filter((data: any) => {
+          //   if (data.checked) {
+          //     return data.funcId;
+          //   }
+          // });
+          // console.log(selectedFuncs)
 
           setSystemFuncGroup(data)
         } else {
@@ -149,6 +149,30 @@ function RoleEdit() {
       return parentGroup;
     })
     return targetGroupData;
+  }
+
+  const onGroupChecked = (groupId: string, checked: boolean) => {
+    if (!loginUser) {
+      return;
+    }
+    //取得功能群組對應的功能id
+    RoleAPI.getGroupDetail({
+      loginUserId: loginUser.loginUserId,
+      loginRoleLevel: loginUser.loginRoleLevel,
+      loginRoleId: loginUser.loginRoleId,
+      langType: loginUser.langType,
+      groupId: groupId
+    }).then(result => {
+      console.log(result.results.groupFuncId)
+      if (checked) {
+        setSelectedFuncs((prevState) => prevState!.concat(result.results.groupFuncId))
+      } else {
+        let remainedChecked = selectedFuncs.filter(checkedKey => !result.results.groupFuncId.includes(checkedKey))
+        setSelectedFuncs(remainedChecked);
+      }
+    }).catch(err => {
+
+    })
   }
 
   return (
@@ -192,8 +216,10 @@ function RoleEdit() {
                       <RCTree
                         treeData={groupData}
                         keys={selectedGroups}
-                        onCheckKeysChange={(checkedKeys: Array<string>) => {
+                        onCheckKeysChange={(checkedKeys: Array<string>, info: { node: any, checked: boolean }) => {
                           setSelectedGroups(checkedKeys);
+                          console.log(info);
+                          onGroupChecked(info.node.key, info.checked)
                         }}
                       />
 

@@ -24,7 +24,7 @@ const RCTree = (props) => {
 
   const onCheck = (checkedKeys, info) => {
     console.log('onCheck', checkedKeys, info);
-    onCheckKeysChange(checkedKeys);
+    onCheckKeysChange(checkedKeys, { node:info.node, checked:info.checked});
   };
 
   const onEdit = () => {
@@ -54,7 +54,7 @@ const RCTree = (props) => {
         //   expandedKeys={keys}
           onExpand={onExpand}
           checkedKeys={keys}
-        //   defaultSelectedKeys={keys}
+          defaultSelectedKeys={keys}
           defaultCheckedKeys={keys}
           onSelect={onSelect}
           onCheck={onCheck}
