@@ -54,6 +54,7 @@
     "react-tag-autocomplete": "^7.1.0",
     "simple-line-icons": "^2.5.5",
     "styled-components": "^6.1.0",
+    "sweetalert": "^2.1.2",
     "typescript": "^5.2.2"
   },
   "scripts": {

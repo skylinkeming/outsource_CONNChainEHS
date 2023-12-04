@@ -24,31 +24,24 @@ enum Permission {
 
 
 function RoleClass() {
-  const { t, i18n } = useTranslation();
-  const [loginUser, setLoginUser] = useState<any>(null);
+  const { t } = useTranslation();
+  const loginUser = useLoginUser();
   const [showAddPopup, setShowAddPopup] = useState<boolean>(false);
   const [dataList, setDataList] = useState<Array<RoleData>>([]);
 
   useEffect(() => {
-    if (!loginUser && localStorage.getItem("loginUser")) {
-      const user = JSON.parse(localStorage.getItem("loginUser")!)
-      console.log()
-      setLoginUser(user)
-    } else if (!!loginUser) {
+    if (loginUser) {
       fetchData();
     }
   }, [loginUser])
 
   const fetchData = () => {
     RoleAPI.getRoleList({
-      loginRoleId: 3,
-      loginUserId: "CLOUDT001",
-      loginRoleLevel: 2,
-      langType: i18n.language
+      ...loginUser!
     }).then(result => {
       if (result) {
         result.results.forEach((roleData: any) => {
-          if (roleData.roleLevel >= loginUser.loginRoleLevel) {
+          if (roleData.roleLevel >= loginUser!.loginRoleLevel) {
             roleData.permission = Permission.CanEdit;
           } else {
             roleData.permission = Permission.CanView;

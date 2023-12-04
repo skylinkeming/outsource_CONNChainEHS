@@ -3,9 +3,11 @@ import { useTranslation } from "react-i18next";
 import { RoleAPI } from "../../../api/roleAPI";
 import useLoginUser from "../../hooks/useLoginUser";
 import { RoleDetail } from "./RoleEdit";
+import Success from "../../common/Success";
+import Warning from "../../common/Warnning";
 
 
-export default function TopPanel(props: { roleDetail: RoleDetail | undefined, onEditSuccess:()=>void }) {
+export default function TopPanel(props: { roleDetail: RoleDetail | undefined, onEditSuccess: () => void }) {
     const { roleDetail, onEditSuccess } = props;
     const { t } = useTranslation();
     const [editMode, setEditMode] = useState(false);
@@ -33,12 +35,8 @@ export default function TopPanel(props: { roleDetail: RoleDetail | undefined, on
 
         if (roleLevelList.length === 0 && loginUser) {
             RoleAPI.getRoleLevelSelectList({
-                loginRoleId: parseInt(loginUser.loginRoleId),
-                loginRoleLevel: loginUser.loginRoleLevel,
-                loginUserId: loginUser.loginUserId,
-                langType: loginUser.langType
+                ...loginUser!
             }).then(result => {
-                console.log(result);
                 if (result) {
                     setRoleLevelList(result.results);
                 }
@@ -66,9 +64,14 @@ export default function TopPanel(props: { roleDetail: RoleDetail | undefined, on
             roleId: roleDetail?.roleId
         }).then(result => {
             console.log(result)
-            onEditSuccess();
-        }).catch(err=>{
-            alert(err)
+            if (result.status === 'Success') {
+                Success("儲存成功")
+                onEditSuccess();
+            } else {
+                Warning(result.message)
+            }
+        }).catch(err => {
+            Warning(err)
         })
     }
     return (

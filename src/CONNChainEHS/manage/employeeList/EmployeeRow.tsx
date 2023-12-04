@@ -4,6 +4,7 @@ import styled from "styled-components";
 
 export interface EmployeeRowData {
   userId: string;
+  roleId: string;
   name: string;
   auth: string;
   dept: string;
@@ -17,8 +18,7 @@ export default function EmployeeRow(props: {
   onChangeStatus: (activated: boolean) => void;
   onDelete: () => void;
 }) {
-  const { userId, name, auth, dept, extension, activated } = props.data;
-
+  const { userId, roleId, name, auth, dept, extension, activated } = props.data;
   return (
     <tr>
       <td data-title="項次">{props.index}</td>
@@ -41,7 +41,7 @@ export default function EmployeeRow(props: {
         </div>
       </td>
       <td data-title="管理">
-        <NavLink to='/manage/employeeEdit'><i className="fas fa-user"></i></NavLink>
+        {userId && roleId && <NavLink to={`/manage/employeeEdit?userId=${userId}&roleId=${roleId}`}><i className="fas fa-user"></i></NavLink>}
         <i style={{ cursor: "pointer" }} className="fas fa-trash-can" onClick={e => { props.onDelete() }}></i>
       </td>
     </tr>

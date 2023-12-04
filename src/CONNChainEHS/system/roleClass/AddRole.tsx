@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import styled from "styled-components"
 import { RoleAPI } from "../../../api/roleAPI"
 import { useTranslation } from "react-i18next";
+import useLoginUser from "../../hooks/useLoginUser";
 
 interface RoleLevelData {
     description: string;
@@ -12,7 +13,7 @@ interface RoleLevelData {
 
 
 export default function AddRole(props: { clickCloseBtn: () => void; onAddSuccess: () => void }) {
-    const [loginUser, setLoginUser] = useState<any>(null);
+    const loginUser = useLoginUser()
     const [roleList, setRoleList] = useState<Array<RoleLevelData>>([]);
     const { i18n } = useTranslation();
     const [editValues, setEditValues] = useState({
@@ -23,14 +24,9 @@ export default function AddRole(props: { clickCloseBtn: () => void; onAddSuccess
 
 
     useEffect(() => {
-        if (localStorage.getItem("loginUser")) {
-            const user = JSON.parse(localStorage.getItem("loginUser")!)
-            setLoginUser(user)
+        if (loginUser) {
             RoleAPI.getRoleLevelSelectList({
-                loginRoleId: user.loginRoleId,
-                loginRoleLevel: user.loginRoleLevel,
-                loginUserId: user.loginUserId,
-                langType: i18n.language
+                ...loginUser!
             }).then(result => {
                 console.log(result);
                 if (result) {
@@ -41,7 +37,7 @@ export default function AddRole(props: { clickCloseBtn: () => void; onAddSuccess
             })
 
         }
-    }, [])
+    }, [loginUser])
 
     const addRole = () => {
         if (!loginUser) {

@@ -1,62 +1,17 @@
 import { Config } from "./config"
 
 
-export const RoleAPI = {
-    getRoleList:async (parms:{loginUserId:string, loginRoleLevel:number,loginRoleId:string,langType:string})=>{
-        return fetch(Config.apiAddress+'role/list',{
-            method: "POST",
-            headers: {  
-                "Content-Type": "application/json",
-                "Accept": "application/json",
-            },
-            body: JSON.stringify({
-                ...parms
-            })
-        }).then(res=>res.json())
-    },
-    getRoleLevelSelectList:async (parms:{loginUserId:string, loginRoleLevel:number,loginRoleId:string,langType:string})=>{
-        return fetch(Config.apiAddress+'/selectlist/level',{
-            method: "POST",
-            headers: {  
-                "Content-Type": "application/json",
-                "Accept": "application/json",
-            },
-            body: JSON.stringify({
-                ...parms
-            })
-        }).then(res=>res.json())
-    },
-    addRole:async (parms:{
-        loginUserId:string, 
-        loginRoleLevel:number,
-        loginRoleId:string,
-        langType:string,    
-        roleName:string,
-        roleDescription:string,
-        roleLevel:number
-    })=>{
-        return fetch(Config.apiAddress+'/role/add',{
-            method: "POST",
-            headers: {  
-                "Content-Type": "application/json",
-                "Accept": "application/json",
-            },
-            body: JSON.stringify({
-                ...parms
-            })
-        }).then(res=>res.json())
-    },
-    editRole:async (parms:{
+export const EmployeeAPI = {
+    getEmployeeList:async (parms:{
         loginUserId:string, 
         loginRoleLevel:number,
         loginRoleId:number,
-        langType:string,    
-        roleName:string,
-        roleDescription:string,
-        roleLevel:number,
-        roleId:string
+        langType:string,
+        queryOid?:string,
+        keyword:string,
+        queryLabId:string,
     })=>{
-        return fetch(Config.apiAddress+'/role/edit',{
+        return fetch(Config.apiAddress+'user/list',{
             method: "POST",
             headers: {  
                 "Content-Type": "application/json",
@@ -67,32 +22,14 @@ export const RoleAPI = {
             })
         }).then(res=>res.json())
     },
-    deleteRole:async (parms:{
-        loginUserId:string, 
-        loginRoleLevel:number,
-        loginRoleId:number,
-        langType:string,    
-        roleId:string,
-    })=>{
-        return fetch(Config.apiAddress+'/role/del',{
-            method: "POST",
-            headers: {  
-                "Content-Type": "application/json",
-                "Accept": "application/json",
-            },
-            body: JSON.stringify({
-                ...parms
-            })
-        }).then(res=>res.json())
-    },
-    getRoleDetail:async (parms:{
+    deleteUser:async (parms:{
         loginUserId:string, 
         loginRoleLevel:number,
         loginRoleId:string,
-        langType:string,    
-        roleId:string,
+        langType:string,
+        userId:string,
     })=>{
-        return fetch(Config.apiAddress+'/role/detail',{
+        return fetch(Config.apiAddress+'user/del',{
             method: "POST",
             headers: {  
                 "Content-Type": "application/json",
@@ -103,6 +40,56 @@ export const RoleAPI = {
             })
         }).then(res=>res.json())
     },
+    getUserDetail:async (parms:{
+        loginUserId:string, 
+        loginRoleLevel:number,
+        loginRoleId:string,
+        langType:string,
+        userId:string,
+        roleId:string,
+    })=>{
+        return fetch(Config.apiAddress+'user/detail',{
+            method: "POST",
+            headers: {  
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+            },
+            body: JSON.stringify({
+                ...parms
+            })
+        }).then(res=>res.json())
+    },
+    editUserDetail:async (parms:{
+        loginUserId:string, 
+        loginRoleLevel:number,
+        loginRoleId:string,
+        langType:string,
+        userId:string,
+        userName:string,
+        jobTitleId:number,
+        jobTitle:string,
+        userEmail:string,
+        userEmail2:string,
+        userExt:string,
+        userPhone:string,
+        orgId:string,
+        userBirthday:string,
+        userGender:string,
+        origUnit:string,
+    })=>{
+        return fetch(Config.apiAddress+'/user/edit',{
+            method: "POST",
+            headers: {  
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+            },
+            body: JSON.stringify({
+                ...parms
+            })
+        }).then(res=>res.json())
+    },
+
+   
     getGroupList:async (parms:{
         loginUserId:string, 
         loginRoleLevel:number,

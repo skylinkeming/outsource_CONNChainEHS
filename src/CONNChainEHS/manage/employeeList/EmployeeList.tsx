@@ -1,83 +1,81 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
 import EmployeeRow, { EmployeeRowData } from './EmployeeRow';
 import Footer from '../../layout/Footer';
 import SortIcon from '../../common/SortIcon';
+import { EmployeeAPI } from '../../../api/employeeAPI';
+import useLoginUser from '../../hooks/useLoginUser';
+import Success from '../../common/Success';
+import Warning from '../../common/Warnning';
 
 function EmployeeList() {
-  const [employDataList, setEmployDataList] = useState<Array<EmployeeRowData>>([
-    {
-      userId: "AAA001",
-      name: "王大明",
-      auth: "系安管",
-      dept: "XX中心",
-      extension: "12345",
-      activated: false,
-    },
-    {
-      userId: "AAA002",
-      name: "王大明",
-      auth: "系安管",
-      dept: "理學院",
-      extension: "12345",
-      activated: false,
-    },
-    {
-      userId: "AAA003",
-      name: "王大明",
-      auth: "系安管",
-      dept: "理學院",
-      extension: "12345",
-      activated: false,
-    },
-    {
-      userId: "BBB121",
-      name: "李曉華",
-      auth: "專員",
-      dept: "工學院化學工程系",
-      extension: "45678",
-      activated: false,
-    },
-    {
-      userId: "BBB123",
-      name: "李曉華",
-      auth: "專員",
-      dept: "工學院",
-      extension: "45678",
-      activated: false,
-    },
-    {
-      userId: "BBB124",
-      name: "陳雅婷",
-      auth: "助理教授",
-      dept: "電機資訊學院",
-      extension: "12345",
-      activated: true,
-    },
-    {
-      userId: "BBB125",
-      name: "陳雅婷",
-      auth: "實習生",
-      dept: "電機資訊學院理學工程系",
-      extension: "89898",
-      activated: true,
-    },
-    {
-      userId: "BBB126",
-      name: "陳雅婷",
-      auth: "教授",
-      dept: "電機資訊學院理學工程系",
-      extension: "89898",
-      activated: true,
-    },
-  ]);
+  const loginUser = useLoginUser();
+  const [keyword, setKeyword] = useState("");
+  const [localSearchKey, setLocalSearchKey] = useState("");
+  const [employDataList, setEmployDataList] = useState<Array<EmployeeRowData>>([]);
+  const [localSearchResult, setLocalSearchResult] = useState<Array<EmployeeRowData>>([]);
   const { t } = useTranslation();
 
+  useEffect(() => {
+    if (!loginUser) {
+      return;
+    }
+    EmployeeAPI.getEmployeeList({
+      loginUserId: loginUser.loginUserId,
+      loginRoleId: parseInt(loginUser.loginRoleId),
+      loginRoleLevel: loginUser.loginRoleLevel,
+      langType: loginUser.langType,
+      queryOid: "",
+      keyword: "",
+      queryLabId: ""
+    }).then(result => {
+      if (result.status === 'Success') {
+        let cutList = result.results
+        let resultList = cutList.map((data: any) => {
+          return {
+            userId: data.userId,
+            roleId: data.roleId,
+            name: data.userName,
+            auth: data.jobTitle,
+            dept: data.orgName,
+            extension: data.userExt,
+            activated: data.userStatus === 1 ? true : false,
+          }
+        })
 
+        setEmployDataList(resultList)
+      } else {
+        alert(result.message)
+      }
+      console.log(result);
+    })
+  }, [loginUser])
 
+  useEffect(() => {
+    if (localSearchKey) {
+      console.log(employDataList);
+      let resultList = employDataList.filter((data: any) => {
+        if (
+          (data.userId && data.userId.includes(localSearchKey)) ||
+          (data.auth && data.auth.includes(localSearchKey)) ||
+          (data.dept && data.dept.includes(localSearchKey)) ||
+          (data.name && data.name.includes(localSearchKey)) ||
+          (data.extension && data.extension.includes(localSearchKey))) {
+          return data;
+        }
+      })
+      setLocalSearchResult(resultList);
+    }
 
+  }, [localSearchKey])
 
+  const getShowList = () => {
+    if (!localSearchKey) {
+      return employDataList;
+    }
+    return localSearchResult;
+  }
 
 
   return (
@@ -155,7 +153,9 @@ function EmployeeList() {
                   <div className="col-sm-12 col-md-6 right">
                     <div className="dataTables_filter d-flex">
                       Search:
-                      <input type="search" className="form-control form-control-sm" placeholder="" aria-controls="data-table-default" />
+                      <input value={localSearchKey} onChange={(e) => {
+                        setLocalSearchKey(e.target.value)
+                      }} type="search" className="form-control form-control-sm" placeholder="" aria-controls="data-table-default" />
                     </div>
                   </div>
                 </div>
@@ -175,7 +175,7 @@ function EmployeeList() {
                       </tr>
                     </thead>
                     <tbody className="text-center fs-5">
-                      {employDataList.map((data, idx) => {
+                      {getShowList().map((data, idx) => {
                         return <EmployeeRow
                           key={data.userId}
                           index={idx + 1}
@@ -189,8 +189,22 @@ function EmployeeList() {
                             }
                           }}
                           onDelete={() => {
-                            let updateDataList = [...employDataList].filter((updateData, index) => index !== idx);
-                            setEmployDataList(updateDataList);
+                            EmployeeAPI.deleteUser({
+                              ...loginUser!,
+                              userId: data.userId
+                            }).then(result => {
+                              console.log(result);
+                              if (result.status === 'Success') {
+                                // let updateDataList = [...employDataList].filter((updateData, index) => index !== idx);
+                                // setEmployDataList(updateDataList);
+                                Success("刪除成功")
+                              } else {
+                                Warning(result.message);
+                              }
+                            }).catch(err => {
+                              alert(err);
+                            })
+
                           }}
                         />
                       })}

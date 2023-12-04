@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 // import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
 import BasicInfo from './BasicInfo';
@@ -6,28 +6,30 @@ import Lab from './Lab';
 import OtherAuths from './OtherAuths';
 import EduRecords from './EduRecords';
 import { UserInfo } from './BasicInfo';
+import { EmployeeAPI } from '../../../api/employeeAPI';
+import useLoginUser from '../../hooks/useLoginUser';
 
 function EmployeeEdit() {
-  const [user, setUser] = useState<UserInfo>({
-    account: "CloudT001",
-    enteredDate: "2022-01-01",
-    name: "雲集管理者",
-    jobTitle: "專案組員",
-    auth: "管理者",
-    email: "CloudT001@cloudthink.com.tw",
-    backupEmail: "CloudT001@cloudthink.com.tw",
-    phone: "0900-123456",
-    extension: "12345",
-    school: "電機資訊學院",
-    dept: "電機資訊學院",
-    birthday: "2000/01/01",
-    gender: "男",
-    previousUserId: "AAA087087",
-    originalUnit: "隔壁的大學",
-  });
+  const loginUser = useLoginUser();
+  const [user, setUser] = useState<UserInfo>();
 
   const { t } = useTranslation();
-
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    const userId = url.searchParams.get("userId");
+    const roleId = url.searchParams.get("roleId");
+    if (!!userId && !!roleId) {
+      EmployeeAPI.getUserDetail({
+        ...loginUser!,
+        userId: userId,
+        roleId: roleId
+      }).then(result => {
+        if (result.status === 'Success') {
+          setUser(result.results)
+        }
+      })
+    }
+  }, [])
 
   return (
     <div id="content" className="d-flex flex-column p-0">
@@ -59,7 +61,7 @@ function EmployeeEdit() {
         <div className="row mt-3">
           {/* 左邊基本資料 */}
           <div className="col-xl-4">
-            <BasicInfo userInfo={user} onChange={(data) => { setUser({ ...user, ...data }) }} />
+            {!!user && <BasicInfo userInfo={user} onChange={(data) => { setUser({ ...user, ...data }) }} />}
           </div>
           {/* 右邊分頁 */}
           <div className="col-xl-8">

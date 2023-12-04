@@ -15,7 +15,7 @@ export default function useLoginUser() {
             let user = JSON.parse(localStorage.getItem("loginUser")!)
             user.langType = i18n.language;
             setLoginUser(user)
-        }
+        } 
         // return () => {
 
         // };

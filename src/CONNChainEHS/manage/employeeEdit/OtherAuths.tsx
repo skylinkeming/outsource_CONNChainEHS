@@ -1,5 +1,8 @@
 import styled from "styled-components";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { RoleAPI } from "../../../api/roleAPI";
+import useLoginUser from "../../hooks/useLoginUser";
+import Warning from "../../common/Warnning";
 
 interface OtherAuthData {
     authType: string;
@@ -7,6 +10,9 @@ interface OtherAuthData {
 }
 
 export default function OtherAuths() {
+    const loginUser = useLoginUser();
+    const [roleList, setRoleList] = useState<Array<any>>([]);
+
     const [dataList, setDataList] = useState<Array<OtherAuthData>>([
         {
             authType: "實驗室負責人",
@@ -18,6 +24,25 @@ export default function OtherAuths() {
         },
     ]);
 
+    useEffect(() => {
+        RoleAPI.getRoleList({
+            ...loginUser!
+        }).then(result => {
+            if (result.status === 'Success') {
+                setRoleList(result.results.map((data: any) => {
+                    return {
+                        roleName: data.roleName,
+                        roleId: data.roleId
+                    }
+                }))
+            } else {
+
+            }
+        }).catch(err => {
+            Warning(err)
+        })
+    }, [])
+
 
     return (
         <div className="tab-pane fade" id="employee-tab-2">
@@ -28,9 +53,7 @@ export default function OtherAuths() {
                             <div className="col-md-3">
                                 <h5>實驗室權限</h5>
                                 <select name="" id="" className="form-select" data-parsley-required="true">
-                                    <option value="01">管理者</option>
-                                    <option value="02">環安中心人員</option>
-                                    <option value="03">實驗室負責人</option>
+                                    {roleList.map((data: any) => <option key={data.roleId} value={data.roleId}>{data.roleName}</option>)}
                                 </select>
                             </div>
                             <div className="col-md-3">

@@ -11,6 +11,8 @@ import Footer from '../../layout/Footer';
 import useLoginUser from '../../hooks/useLoginUser';
 import { RoleAPI } from '../../../api/roleAPI';
 import TopPanel from './TopPanel';
+import Warning from '../../common/Warnning';
+import Success from '../../common/Success';
 
 export interface RoleDetail {
   roleLevelName: string;
@@ -66,7 +68,7 @@ function RoleEdit() {
           setSelectedFuncs(result.results.objFuncId)
           console.log(result.results)
         } else {
-          alert(result.message)
+          Warning(result.message)
         }
       })
 
@@ -92,7 +94,7 @@ function RoleEdit() {
           })
           setGroupData(targetGroupData)
         } else {
-          alert(result.message)
+          Warning(result.message)
         }
       })
 
@@ -107,7 +109,7 @@ function RoleEdit() {
           let data = getFuncTree(result.results);
           setSystemFuncGroup(data)
         } else {
-          alert(result.message)
+          Warning(result.message)
         }
       })
     }
@@ -150,18 +152,19 @@ function RoleEdit() {
     }
     //取得功能群組對應的功能id
     RoleAPI.getGroupDetail({
-      loginUserId: loginUser.loginUserId,
-      loginRoleLevel: loginUser.loginRoleLevel,
-      loginRoleId: loginUser.loginRoleId,
-      langType: loginUser.langType,
+      ...loginUser!,
       groupId: groupId
     }).then(result => {
-      console.log(result.results.groupFuncId)
-      if (checked) {
-        setSelectedFuncs((prevState) => prevState!.concat(result.results.groupFuncId))
-      } else {
-        let remainedChecked = selectedFuncs.filter(checkedKey => !result.results.groupFuncId.includes(checkedKey))
-        setSelectedFuncs(remainedChecked);
+      // console.log(result.results.groupFuncId)
+      if (result.status === 'Success') {
+        if (checked) {
+          setSelectedFuncs((prevState) => prevState!.concat(result.results.groupFuncId))
+        } else {
+          let remainedChecked = selectedFuncs.filter(checkedKey => !result.results.groupFuncId.includes(checkedKey))
+          setSelectedFuncs(remainedChecked);
+        }
+      }else {
+        Warning(result.message)
       }
     }).catch(err => {
 
@@ -179,12 +182,12 @@ function RoleEdit() {
         objFuncId: selectedFuncs
       }).then(result => {
         if (result.status === 'Success') {
-          console.log(result);
+          Success("儲存成功")
         } else {
-          alert(result.message)
+          Warning(result.message)
         }
       }).catch(err => {
-        alert(err)
+        Warning(err)
       })
 
     }
