@@ -11,7 +11,19 @@ import Warning from '../../common/Warnning';
 
 function EmployeeList() {
   const loginUser = useLoginUser();
-  const [keyword, setKeyword] = useState("");
+  const [condition, setCondition] = useState<{
+    keyword: string;
+    currentPage: number;
+    pageSize: number;
+    totalPages: number;
+    totalRows: number;
+  }>({
+    keyword: "",
+    currentPage: 1,
+    pageSize: 50,
+    totalPages: 0,
+    totalRows: 0
+  })
   const [localSearchKey, setLocalSearchKey] = useState("");
   const [employDataList, setEmployDataList] = useState<Array<EmployeeRowData>>([]);
   const [localSearchResult, setLocalSearchResult] = useState<Array<EmployeeRowData>>([]);
@@ -27,12 +39,19 @@ function EmployeeList() {
       loginRoleLevel: loginUser.loginRoleLevel,
       langType: loginUser.langType,
       queryOid: "",
-      keyword: "",
-      queryLabId: ""
+      keyword: condition.keyword,
+      queryLabId: "",
+      currentPage: condition.currentPage,
+      pageSize: condition.pageSize
     }).then(result => {
       if (result.status === 'Success') {
-        let cutList = result.results
-        let resultList = cutList.map((data: any) => {
+        // console.log(result.pageinfo.totalPages)
+        setCondition({
+          ...condition,
+          totalPages: result.pageinfo.totalPages,
+          totalRows: result.pageinfo.totalRows
+        })
+        let resultList = result.results.map((data: any) => {
           return {
             userId: data.userId,
             roleId: data.roleId,
@@ -50,7 +69,7 @@ function EmployeeList() {
       }
       console.log(result);
     })
-  }, [loginUser])
+  }, [loginUser, condition])
 
   useEffect(() => {
     if (localSearchKey) {
@@ -75,6 +94,13 @@ function EmployeeList() {
       return employDataList;
     }
     return localSearchResult;
+  }
+
+  const getPageInfo = () => {
+    let firstNumber = (condition.currentPage - 1) * condition.pageSize ? ((condition.currentPage - 1) * condition.pageSize + 1) : 1;
+    let finalNumber = firstNumber + condition.pageSize - 1;
+
+    return `Showing ${firstNumber} to ${finalNumber} of ${condition.totalRows} entries`
   }
 
 
@@ -141,7 +167,18 @@ function EmployeeList() {
                   <div className="col-sm-12 col-md-6 left">
                     <div className="dataTables_length d-flex align-items-center">
                       Show
-                      <select name="data-table-default_length" aria-controls="data-table-default" className="form-select form-select-sm">
+                      <select
+                        value={condition.pageSize}
+                        onChange={(e) => {
+                          setCondition({
+                            ...condition,
+                            pageSize: parseInt(e.target.value)
+                          })
+                        }}
+                        name="data-table-default_length"
+                        aria-controls="data-table-default"
+                        className="form-select form-select-sm"
+                      >
                         <option value="10">10</option>
                         <option value="25">25</option>
                         <option value="50">50</option>
@@ -164,12 +201,12 @@ function EmployeeList() {
                     <thead className="fs-4 fw-bold">
                       <tr>
                         <th>{t('table.title.item')} </th>
-                        <th>工號 <SortIcon dataList={employDataList} dataField={"userId"} setFunction={setEmployDataList} /></th>
+                        <th>工號 <SortIcon dataList={getShowList()} dataField={"userId"} setFunction={setEmployDataList} /></th>
                         <th>{t('table.title.name')} <SortIcon dataList={employDataList} dataField={"name"} setFunction={setEmployDataList} /></th>
-                        <th>權限 <SortIcon dataList={employDataList} dataField={"auth"} setFunction={setEmployDataList} /></th>
-                        <th>單位 <SortIcon dataList={employDataList} dataField={"dept"} setFunction={setEmployDataList} /></th>
+                        <th>權限 <SortIcon dataList={getShowList()} dataField={"auth"} setFunction={setEmployDataList} /></th>
+                        <th>單位 <SortIcon dataList={getShowList()} dataField={"dept"} setFunction={setEmployDataList} /></th>
                         {/* <th>系所</th> */}
-                        <th>分機 <SortIcon dataList={employDataList} dataField={"extension"} setFunction={setEmployDataList} /></th>
+                        <th>分機 <SortIcon dataList={getShowList()} dataField={"extension"} setFunction={setEmployDataList} /></th>
                         <th data-orderable="false">啟用 <SortIcon dataList={employDataList} dataField={"activated"} setFunction={setEmployDataList} /></th>
                         <th data-orderable="false">管理</th>
                       </tr>
@@ -177,7 +214,7 @@ function EmployeeList() {
                     <tbody className="text-center fs-5">
                       {getShowList().map((data, idx) => {
                         return <EmployeeRow
-                          key={data.userId}
+                          key={data.userId + idx}
                           index={idx + 1}
                           data={data}
                           onChangeStatus={(activated) => {
@@ -212,7 +249,7 @@ function EmployeeList() {
                   </table>
                   <div className="row bottomFunctionRow">
                     <div className="col-sm-12 col-md-5">
-                      <div className="dataTables_info" role="status" aria-live="polite">Showing 1 to 9 of 9 entries
+                      <div className="dataTables_info" role="status" aria-live="polite">{getPageInfo()}
                       </div>
                     </div>
                     <div className="col-sm-12 col-md-7">

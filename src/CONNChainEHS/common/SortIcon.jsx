@@ -16,11 +16,13 @@ export default function SortIcon({ dataList, dataField, setFunction }) {
         if (new Date(a[dataField]).toString() === "Invalid Date") {
             //照unicode排序
             result = a[dataField].localeCompare(b[dataField]);
-        } else {
+        }
+        else {
             //按日期大小排序
             result =
                 new Date(a[dataField]).getTime() - new Date(b[dataField]).getTime();
         }
+
         return result * (direction === "up" ? 1 : -1);
     };
 

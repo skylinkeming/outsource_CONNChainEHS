@@ -10,6 +10,8 @@ export const EmployeeAPI = {
         queryOid?:string,
         keyword:string,
         queryLabId:string,
+        currentPage:number,
+        pageSize:number
     })=>{
         return fetch(Config.apiAddress+'user/list',{
             method: "POST",
@@ -97,60 +99,6 @@ export const EmployeeAPI = {
         langType:string,    
     })=>{
         return fetch(Config.apiAddress+'/group/list',{
-            method: "POST",
-            headers: {  
-                "Content-Type": "application/json",
-                "Accept": "application/json",
-            },
-            body: JSON.stringify({
-                ...parms
-            })
-        }).then(res=>res.json())
-    },
-    getGroupDetail:async (parms:{
-        loginUserId:string, 
-        loginRoleLevel:number,
-        loginRoleId:string,
-        langType:string, 
-        groupId:string   
-    })=>{
-        return fetch(Config.apiAddress+'/group/detail',{
-            method: "POST",
-            headers: {  
-                "Content-Type": "application/json",
-                "Accept": "application/json",
-            },
-            body: JSON.stringify({
-                ...parms
-            })
-        }).then(res=>res.json())
-    },
-    getFuncGroupList:async (parms:{
-        loginUserId:string, 
-        loginRoleLevel:number,
-        loginRoleId:string,
-        langType:string,    
-    })=>{
-        return fetch(Config.apiAddress+'/func/list',{
-            method: "POST",
-            headers: {  
-                "Content-Type": "application/json",
-                "Accept": "application/json",
-            },
-            body: JSON.stringify({
-                ...parms
-            })
-        }).then(res=>res.json())
-    },
-    saveRoleFuncs:async (parms:{
-        loginUserId:string, 
-        loginRoleLevel:number,
-        loginRoleId:string,
-        langType:string,  
-        roleId:string,
-        objFuncId:string[]
-    })=>{
-        return fetch(Config.apiAddress+'/objfunc/edit',{
             method: "POST",
             headers: {  
                 "Content-Type": "application/json",
