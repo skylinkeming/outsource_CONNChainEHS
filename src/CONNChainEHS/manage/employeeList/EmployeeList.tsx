@@ -218,7 +218,8 @@ function EmployeeList() {
                         onChange={(e) => {
                           setCondition({
                             ...condition,
-                            pageSize: parseInt(e.target.value)
+                            pageSize: parseInt(e.target.value),
+                            currentPage: 1
                           })
 
                         }}
