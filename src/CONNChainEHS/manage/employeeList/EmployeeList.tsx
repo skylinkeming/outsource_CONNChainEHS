@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
 import EmployeeRow, { EmployeeRowData } from './EmployeeRow';
@@ -11,16 +11,20 @@ import Warning from '../../common/Warnning';
 
 function EmployeeList() {
   const loginUser = useLoginUser();
+  const searchInput = useRef<HTMLInputElement>(null)
   const [condition, setCondition] = useState<{
     keyword: string;
     currentPage: number;
     pageSize: number;
-    totalPages: number;
-    totalRows: number;
   }>({
     keyword: "",
     currentPage: 1,
     pageSize: 50,
+  })
+  const [pageInfo, setPageInfo] = useState<{
+    totalPages: number;
+    totalRows: number;
+  }>({
     totalPages: 0,
     totalRows: 0
   })
@@ -33,11 +37,36 @@ function EmployeeList() {
     if (!loginUser) {
       return;
     }
+    fetchData();
+  }, [loginUser, condition])
+
+  useEffect(() => {
+    if (localSearchKey) {
+      // console.log(employDataList);
+      let resultList = employDataList.filter((data: any) => {
+        if (
+          (data.userId && data.userId.includes(localSearchKey)) ||
+          (data.auth && data.auth.includes(localSearchKey)) ||
+          (data.dept && data.dept.includes(localSearchKey)) ||
+          (data.name && data.name.includes(localSearchKey)) ||
+          (data.extension && data.extension.includes(localSearchKey))) {
+          return data;
+        }
+      })
+      setLocalSearchResult(resultList);
+    }
+
+  }, [localSearchKey])
+
+  const fetchData = () => {
+    if (!loginUser) {
+      return;
+    }
     EmployeeAPI.getEmployeeList({
-      loginUserId: loginUser.loginUserId,
-      loginRoleId: parseInt(loginUser.loginRoleId),
-      loginRoleLevel: loginUser.loginRoleLevel,
-      langType: loginUser.langType,
+      loginUserId: loginUser!.loginUserId,
+      loginRoleId: parseInt(loginUser!.loginRoleId),
+      loginRoleLevel: loginUser!.loginRoleLevel,
+      langType: loginUser!.langType,
       queryOid: "",
       keyword: condition.keyword,
       queryLabId: "",
@@ -45,9 +74,7 @@ function EmployeeList() {
       pageSize: condition.pageSize
     }).then(result => {
       if (result.status === 'Success') {
-        // console.log(result.pageinfo.totalPages)
-        setCondition({
-          ...condition,
+        setPageInfo({
           totalPages: result.pageinfo.totalPages,
           totalRows: result.pageinfo.totalRows
         })
@@ -67,27 +94,8 @@ function EmployeeList() {
       } else {
         alert(result.message)
       }
-      console.log(result);
     })
-  }, [loginUser, condition])
-
-  useEffect(() => {
-    if (localSearchKey) {
-      console.log(employDataList);
-      let resultList = employDataList.filter((data: any) => {
-        if (
-          (data.userId && data.userId.includes(localSearchKey)) ||
-          (data.auth && data.auth.includes(localSearchKey)) ||
-          (data.dept && data.dept.includes(localSearchKey)) ||
-          (data.name && data.name.includes(localSearchKey)) ||
-          (data.extension && data.extension.includes(localSearchKey))) {
-          return data;
-        }
-      })
-      setLocalSearchResult(resultList);
-    }
-
-  }, [localSearchKey])
+  }
 
   const getShowList = () => {
     if (!localSearchKey) {
@@ -98,9 +106,44 @@ function EmployeeList() {
 
   const getPageInfo = () => {
     let firstNumber = (condition.currentPage - 1) * condition.pageSize ? ((condition.currentPage - 1) * condition.pageSize + 1) : 1;
-    let finalNumber = firstNumber + condition.pageSize - 1;
+    let finalNumber = ((firstNumber + condition.pageSize - 1) > pageInfo.totalRows) ? pageInfo.totalRows : (firstNumber + condition.pageSize - 1);
+    return `Showing ${firstNumber} to ${finalNumber} of ${pageInfo.totalRows} entries`
+  }
 
-    return `Showing ${firstNumber} to ${finalNumber} of ${condition.totalRows} entries`
+  const renderPageBtns = () => {
+    let isFirstPage = condition.currentPage === 1;
+    let isLastPage = condition.currentPage === pageInfo.totalPages;
+
+    return (
+      <ul className="pagination">
+        <li className={"paginate_button page-item previous" + (isFirstPage ? " disabled" : "")} id="data-table-default_previous" onClick={() => {
+          if (isFirstPage) {
+            return;
+          }
+          setCondition({
+            ...condition, currentPage: condition.currentPage - 1
+          })
+        }}>
+          <a href="#" aria-controls="data-table-default" data-dt-idx="0" className="page-link">
+            Previous
+          </a>
+        </li>
+        <li className="paginate_button page-item active">
+          <a href="#" aria-controls="data-table-default" data-dt-idx="1" className="page-link">{condition.currentPage}</a>
+        </li>
+        <li className={"paginate_button page-item next" + (isLastPage ? " disabled" : "")} id="data-table-default_next" onClick={() => {
+          if (isLastPage) {
+            return;
+          }
+          setCondition({
+            ...condition, currentPage: condition.currentPage + 1
+          })
+        }}>
+          <a href="#" aria-controls="data-table-default" data-dt-idx="2" className="page-link">Next
+          </a>
+        </li>
+      </ul>
+    )
   }
 
 
@@ -152,11 +195,14 @@ function EmployeeList() {
                     </div>
                     <div className="col-xl-3 d-flex align-items-center">
                       <label htmlFor="">{'關鍵字查詢{{ 工號、姓名}}'}</label>
-                      <input type="text" className="form-control w-75" placeholder="請輸入關鍵字查詢" />
+                      <input type="text" className="form-control w-75" placeholder="請輸入關鍵字查詢" ref={searchInput} />
                     </div>
                     <div className="buttonPanel col-xl-3 d-flex align-items-center">
-                      <button type="button" className="btn btn-warning"><i
-                        className="fas fa-magnifying-glass"></i> 查詢</button>
+                      <button type="button" className="btn btn-warning"
+                        onClick={() => {
+                          setCondition({ ...condition, keyword: searchInput.current!.value, currentPage: 1 })
+                        }}>
+                        <i className="fas fa-magnifying-glass" ></i> 查詢</button>
                     </div>
                   </div>
                 </div>
@@ -174,6 +220,7 @@ function EmployeeList() {
                             ...condition,
                             pageSize: parseInt(e.target.value)
                           })
+
                         }}
                         name="data-table-default_length"
                         aria-controls="data-table-default"
@@ -254,20 +301,7 @@ function EmployeeList() {
                     </div>
                     <div className="col-sm-12 col-md-7">
                       <div className="dataTables_paginate paging_simple_numbers">
-                        <ul className="pagination">
-                          <li className="paginate_button page-item previous disabled" id="data-table-default_previous">
-                            <a href="#" aria-controls="data-table-default" data-dt-idx="0" className="page-link">
-                              Previous
-                            </a>
-                          </li>
-                          <li className="paginate_button page-item active">
-                            <a href="#" aria-controls="data-table-default" data-dt-idx="1" className="page-link">1</a>
-                          </li>
-                          <li className="paginate_button page-item next disabled" id="data-table-default_next">
-                            <a href="#" aria-controls="data-table-default" data-dt-idx="2" className="page-link">Next
-                            </a>
-                          </li>
-                        </ul>
+                        {renderPageBtns()}
                       </div>
                     </div>
                   </div>
