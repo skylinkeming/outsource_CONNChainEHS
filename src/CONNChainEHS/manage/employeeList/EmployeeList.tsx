@@ -266,7 +266,7 @@ function EmployeeList() {
                       </tr>
                     </thead>
                     <tbody className="text-center fs-5">
-                      {loading && <Loader/>}
+                      {loading && <Loader />}
                       {!loading && getShowList().map((data, idx) => {
                         return <EmployeeRow
                           key={data.userId + idx}
@@ -371,6 +371,8 @@ const StyledEmployeeList = styled.div`
     }
   }
   table {
+    position:relative;
+    min-height:200px;
     th {
       text-align: center;
       white-space:nowrap;
@@ -385,11 +387,13 @@ const StyledEmployeeList = styled.div`
     tr:nth-of-type(2n+1){
       background:#e9ecef;
     }
+    td {
+      .form-check {
+        justify-content:center;  
+      }
+    }
   }
-  table {
-    position:relative;
-    min-height:200px;
-  }
+
   @media (max-width: 600px){
     label {
       width:200px;
@@ -399,37 +403,44 @@ const StyledEmployeeList = styled.div`
       display:flex;
       justify-content: flex-end;
     }
-    thead {
-      display:none;
-    }
-    tbody, td, tr {
-      display:block;
-      background: #fff !important;
-      box-shadow: inset 0 0 0 9999px white;
+    table {
+      thead {
+        display:none;
+      }
+      tbody, td, tr {
+        display:block;
+        background: #fff !important;
+        box-shadow: inset 0 0 0 9999px white;
 
-    }
-    tr {
-      border: 1px solid #ccc;
-      margin-bottom: 10px;
-      background: #fff !important;
-    }
-    td {
-      background: #fff!important;
-      position:relative;
-      padding-left: 100px;
-      text-align:left;
-    }
-    td::before {
-        content: attr(data-title);
-        position: absolute;
-        top: 6px;
-        left: 6px;
-        width: 30%;
-        padding-right: 10px;
-        white-space: nowrap;
-        text-align: left;
-        font-weight: bold;
-        color: #1a1a1a;
+      }
+      tr {
+        border: 1px solid #ccc;
+        margin-bottom: 10px;
+        background: #fff !important;
+      }
+      td {
+        background: #fff!important;
+        position:relative;
+        padding-left: 100px;
+        text-align:left;
+        min-height:39.5px;
+        .form-check {
+          justify-content:start;  
+        }
+      }
+      td::before {
+          content: attr(data-title);
+          position: absolute;
+          top: 6px;
+          left: 6px;
+          width: 30%;
+          padding-right: 10px;
+          white-space: nowrap;
+          text-align: left;
+          font-weight: bold;
+          color: #1a1a1a;
+      }
+
     }
     
   }

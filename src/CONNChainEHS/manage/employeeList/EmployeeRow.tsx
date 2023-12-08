@@ -29,7 +29,7 @@ export default function EmployeeRow(props: {
       {/* <td></td> */}
       <td data-title="分機">{extension}</td>
       <td data-title="啟用">
-        <div className="form-check form-switch d-flex justify-content-center align-items-center">
+        <div className="form-check form-switch d-flex align-items-center">
           <input
             className="form-check-input"
             type="checkbox"
