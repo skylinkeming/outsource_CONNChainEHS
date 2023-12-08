@@ -66,7 +66,7 @@ function RoleEdit() {
           setRoleDetail(result.results);
           // setSelectedFuncs(['d7', 'f41'])
           setSelectedFuncs(result.results.objFuncId)
-          console.log(result.results)
+          // console.log(result.results)
         } else {
           Warning(result.message)
         }
@@ -78,7 +78,7 @@ function RoleEdit() {
         loginRoleId: loginUser.loginRoleId,
         langType: loginUser.langType,
       }).then(result => {
-        console.log(result);
+        // console.log(result);
         if (result.status === 'Success') {
           // setRoleDetail(result.results);
           let targetGroupData = result.results.map((group: any) => {
@@ -104,9 +104,10 @@ function RoleEdit() {
         loginRoleId: loginUser.loginRoleId,
         langType: loginUser.langType,
       }).then(result => {
-        console.log(result);
+        // console.log(result);
         if (result.status === 'Success') {
           let data = getFuncTree(result.results);
+          // console.log(data)
           setSystemFuncGroup(data)
         } else {
           Warning(result.message)
@@ -150,6 +151,15 @@ function RoleEdit() {
     if (!loginUser) {
       return;
     }
+    if (groupId === 'all') {
+      if (checked) {
+        setSelectedFuncs((prevState) => prevState!.concat(systemFuncGroup.map(func => func.key)))
+      } else {
+        setSelectedFuncs([]);
+      }
+      return;
+    }
+
     //取得功能群組對應的功能id
     RoleAPI.getGroupDetail({
       ...loginUser!,
@@ -163,7 +173,7 @@ function RoleEdit() {
           let remainedChecked = selectedFuncs.filter(checkedKey => !result.results.groupFuncId.includes(checkedKey))
           setSelectedFuncs(remainedChecked);
         }
-      }else {
+      } else {
         Warning(result.message)
       }
     }).catch(err => {
@@ -236,7 +246,7 @@ function RoleEdit() {
                         keys={selectedGroups}
                         onCheckKeysChange={(checkedKeys: Array<string>, info: { node: any, checked: boolean }) => {
                           setSelectedGroups(checkedKeys);
-                          console.log(info);
+                          // console.log(info);
                           onGroupChecked(info.node.key, info.checked)
                         }}
                       />

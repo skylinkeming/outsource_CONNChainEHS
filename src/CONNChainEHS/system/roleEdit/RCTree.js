@@ -14,16 +14,16 @@ const RCTree = (props) => {
   let selKey = null;
 
   const onExpand = (expandedKeys) => {
-    console.log('onExpand', expandedKeys);
+    // console.log('onExpand', expandedKeys);
   };
 
   const onSelect = (selectedKeys, info) => {
-    console.log('selected', selectedKeys, info);
+    // console.log('selected', selectedKeys, info);
     selKey = info.node.props.eventKey;
   };
 
   const onCheck = (checkedKeys, info) => {
-    console.log('onCheck', checkedKeys, info);
+    // console.log('onCheck', checkedKeys, info);
     onCheckKeysChange(checkedKeys, { node:info.node, checked:info.checked});
   };
 

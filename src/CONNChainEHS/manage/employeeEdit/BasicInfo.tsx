@@ -41,10 +41,7 @@ export default function BasicInfo(props: { userInfo: UserInfo, onChange: (data: 
         }
         if (isEdit) {
             EmployeeAPI.editUserDetail({
-                loginUserId: loginUser.loginUserId,
-                loginRoleLevel: loginUser.loginRoleLevel,
-                loginRoleId: loginUser.loginRoleId,
-                langType: loginUser.langType,
+                ...loginUser!,
                 userId: userInfo.userId,
                 userName: userInfo.userName,
                 jobTitleId: userInfo.jobTitleId,
