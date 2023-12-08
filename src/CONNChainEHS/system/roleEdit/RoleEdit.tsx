@@ -36,8 +36,8 @@ function RoleEdit() {
   const [roleDetail, setRoleDetail] = useState<RoleDetail>();
   const [groupData, setGroupData] = useState<Array<any>>([]);
   const [systemFuncGroup, setSystemFuncGroup] = useState<Array<any>>([]);
-  const [selectedGroups, setSelectedGroups] = useState<Array<string>>([]);
-  const [selectedFuncs, setSelectedFuncs] = useState<Array<string>>([]);
+  const [checkedGroups, setCheckedGroups] = useState<Array<string>>([]);
+  const [checkedFuncs, setCheckedFuncs] = useState<Array<string>>([]);
 
 
   const loginUser = useLoginUser();
@@ -64,9 +64,7 @@ function RoleEdit() {
       }).then(result => {
         if (result.status === 'Success') {
           setRoleDetail(result.results);
-          // setSelectedFuncs(['d7', 'f41'])
-          setSelectedFuncs(result.results.objFuncId)
-          // console.log(result.results)
+          setCheckedFuncs(result.results.objFuncId)
         } else {
           Warning(result.message)
         }
@@ -153,9 +151,9 @@ function RoleEdit() {
     }
     if (groupId === 'all') {
       if (checked) {
-        setSelectedFuncs((prevState) => prevState!.concat(systemFuncGroup.map(func => func.key)))
+        setCheckedFuncs((prevState) => prevState!.concat(systemFuncGroup.map(func => func.key)))
       } else {
-        setSelectedFuncs([]);
+        setCheckedFuncs([]);
       }
       return;
     }
@@ -168,10 +166,10 @@ function RoleEdit() {
       // console.log(result.results.groupFuncId)
       if (result.status === 'Success') {
         if (checked) {
-          setSelectedFuncs((prevState) => prevState!.concat(result.results.groupFuncId))
+          setCheckedFuncs((prevState) => prevState!.concat(result.results.groupFuncId))
         } else {
-          let remainedChecked = selectedFuncs.filter(checkedKey => !result.results.groupFuncId.includes(checkedKey))
-          setSelectedFuncs(remainedChecked);
+          let remainedChecked = checkedFuncs.filter(checkedKey => !result.results.groupFuncId.includes(checkedKey))
+          setCheckedFuncs(remainedChecked);
         }
       } else {
         Warning(result.message)
@@ -189,7 +187,7 @@ function RoleEdit() {
         loginRoleId: loginUser!.loginRoleId,
         langType: loginUser!.langType,
         roleId: roleDetail!.roleId!,
-        objFuncId: selectedFuncs
+        objFuncId: checkedFuncs
       }).then(result => {
         if (result.status === 'Success') {
           Success("儲存成功")
@@ -243,9 +241,9 @@ function RoleEdit() {
                     <div className="panel-body">
                       <RCTree
                         treeData={groupData}
-                        keys={selectedGroups}
+                        keys={checkedGroups}
                         onCheckKeysChange={(checkedKeys: Array<string>, info: { node: any, checked: boolean }) => {
-                          setSelectedGroups(checkedKeys);
+                          setCheckedGroups(checkedKeys);
                           // console.log(info);
                           onGroupChecked(info.node.key, info.checked)
                         }}
@@ -260,9 +258,9 @@ function RoleEdit() {
                     <div className="panel-body">
                       {!!systemFuncGroup && <RCTree
                         treeData={systemFuncGroup}
-                        keys={selectedFuncs}
+                        keys={checkedFuncs}
                         onCheckKeysChange={(checkedKeys: Array<string>) => {
-                          setSelectedFuncs(checkedKeys);
+                          setCheckedFuncs(checkedKeys);
                         }}
                       />}
                     </div>

@@ -8,6 +8,7 @@ import { EmployeeAPI } from '../../../api/employeeAPI';
 import useLoginUser from '../../hooks/useLoginUser';
 import Success from '../../common/Success';
 import Warning from '../../common/Warnning';
+import Loader from '../../common/Loader';
 
 function EmployeeList() {
   const loginUser = useLoginUser();
@@ -28,9 +29,10 @@ function EmployeeList() {
     totalPages: 0,
     totalRows: 0
   })
-  const [localSearchKey, setLocalSearchKey] = useState("");
   const [employDataList, setEmployDataList] = useState<Array<EmployeeRowData>>([]);
+  const [localSearchKey, setLocalSearchKey] = useState("");
   const [localSearchResult, setLocalSearchResult] = useState<Array<EmployeeRowData>>([]);
+  const [loading, setLoading] = useState(false);
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -62,6 +64,7 @@ function EmployeeList() {
     if (!loginUser) {
       return;
     }
+    setLoading(true)
     EmployeeAPI.getEmployeeList({
       loginUserId: loginUser!.loginUserId,
       loginRoleId: parseInt(loginUser!.loginRoleId),
@@ -73,6 +76,7 @@ function EmployeeList() {
       currentPage: condition.currentPage,
       pageSize: condition.pageSize
     }).then(result => {
+      setLoading(false)
       if (result.status === 'Success') {
         setPageInfo({
           totalPages: result.pageinfo.totalPages,
@@ -94,6 +98,9 @@ function EmployeeList() {
       } else {
         alert(result.message)
       }
+    }).catch(err => {
+      alert(err)
+      setLoading(false)
     })
   }
 
@@ -221,7 +228,6 @@ function EmployeeList() {
                             pageSize: parseInt(e.target.value),
                             currentPage: 1
                           })
-
                         }}
                         name="data-table-default_length"
                         aria-controls="data-table-default"
@@ -260,7 +266,8 @@ function EmployeeList() {
                       </tr>
                     </thead>
                     <tbody className="text-center fs-5">
-                      {getShowList().map((data, idx) => {
+                      {loading && <Loader/>}
+                      {!loading && getShowList().map((data, idx) => {
                         return <EmployeeRow
                           key={data.userId + idx}
                           index={idx + 1}
@@ -378,6 +385,10 @@ const StyledEmployeeList = styled.div`
     tr:nth-of-type(2n+1){
       background:#e9ecef;
     }
+  }
+  table {
+    position:relative;
+    min-height:200px;
   }
   @media (max-width: 600px){
     label {
