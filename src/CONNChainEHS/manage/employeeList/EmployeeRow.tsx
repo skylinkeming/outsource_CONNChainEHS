@@ -1,6 +1,5 @@
-import React, { useState } from "react"
 import { NavLink } from "react-router-dom";
-import styled from "styled-components";
+import Warning from "../../common/Warnning";
 
 export interface EmployeeRowData {
   userId: string;
@@ -19,6 +18,7 @@ export default function EmployeeRow(props: {
   onDelete: () => void;
 }) {
   const { userId, roleId, name, auth, dept, extension, activated } = props.data;
+
   return (
     <tr>
       <td data-title="項次">{props.index}</td>
@@ -42,7 +42,13 @@ export default function EmployeeRow(props: {
       </td>
       <td data-title="管理">
         {userId && roleId && <NavLink to={`/manage/employeeEdit?userId=${userId}&roleId=${roleId}`}><i className="fas fa-user"></i></NavLink>}
-        <i style={{ cursor: "pointer" }} className="fas fa-trash-can" onClick={e => { props.onDelete() }}></i>
+        <i style={{ cursor: "pointer" }} className="fas fa-trash-can" onClick={e => {
+          Warning("確定要刪除？", true).then((value) => {
+            if (value) {
+              props.onDelete()
+            }
+          })
+        }}></i>
       </td>
     </tr>
   )

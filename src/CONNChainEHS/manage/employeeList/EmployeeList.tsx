@@ -82,7 +82,8 @@ function EmployeeList() {
           totalPages: result.pageinfo.totalPages,
           totalRows: result.pageinfo.totalRows
         })
-        let resultList = result.results.map((data: any) => {
+        let showList = result.results.filter((data: any) => data.userStatus === 1 || data.userStatus === 0);
+        let resultList = showList.map((data: any) => {
           return {
             userId: data.userId,
             roleId: data.roleId,
@@ -155,7 +156,7 @@ function EmployeeList() {
 
 
   return (
-    <StyledEmployeeList>
+    <StyledEmployeeList loading={loading}>
       <div className="d-flex flex-column p-0" id="content">
         {/* BEGIN scrollbar */}
         <div className="app-content-padding flex-grow-1">
@@ -273,12 +274,26 @@ function EmployeeList() {
                           index={idx + 1}
                           data={data}
                           onChangeStatus={(activated) => {
-                            let cloneList = [...employDataList];
-                            let updateData = cloneList.filter(updateData => updateData.userId === data.userId);
-                            if (updateData.length) {
-                              updateData[0].activated = activated;
-                              setEmployDataList(cloneList);
-                            }
+                            EmployeeAPI.changeUserStatus({
+                              ...loginUser!,
+                              userId: data.userId,
+                              userStatus: activated ? "1" : "0"
+                            }).then(result => {
+                              if (result.status === 'Success') {
+                                Success("變更成功")
+                                let cloneList = [...employDataList];
+                                let updateData = cloneList.filter(updateData => updateData.userId === data.userId);
+                                if (updateData.length) {
+                                  updateData[0].activated = activated;
+                                  setEmployDataList(cloneList);
+                                }
+                              } else {
+                                Warning(result.message);
+                              }
+                            }).catch(err => {
+                              Warning(err);
+                            })
+
                           }}
                           onDelete={() => {
                             EmployeeAPI.deleteUser({
@@ -287,14 +302,14 @@ function EmployeeList() {
                             }).then(result => {
                               console.log(result);
                               if (result.status === 'Success') {
-                                // let updateDataList = [...employDataList].filter((updateData, index) => index !== idx);
-                                // setEmployDataList(updateDataList);
+                                let updateDataList = [...employDataList].filter((updateData, index) => index !== idx);
+                                setEmployDataList(updateDataList);
                                 Success("刪除成功")
                               } else {
                                 Warning(result.message);
                               }
                             }).catch(err => {
-                              alert(err);
+                              Warning(err);
                             })
 
                           }}
@@ -329,7 +344,7 @@ function EmployeeList() {
 }
 
 
-const StyledEmployeeList = styled.div`
+const StyledEmployeeList = styled.div<{ loading?: boolean }>`
   padding-bottom:150px;
 
   .buttonRow {
@@ -372,7 +387,7 @@ const StyledEmployeeList = styled.div`
   }
   table {
     position:relative;
-    min-height:200px;
+    min-height:${props => props.loading ? "200px" : "auto"};
     th {
       text-align: center;
       white-space:nowrap;

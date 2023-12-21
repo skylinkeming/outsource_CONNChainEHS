@@ -21,20 +21,21 @@ function Header() {
 	useEffect(() => {
 		setCurrentNationFlag();
 		localStorage.setItem("loginUser", JSON.stringify({
-			loginUserId:"CLOUDT001",
-			loginRoleLevel:2,
-			loginRoleId:"3",
+			loginUserId: "CLOUDT001",
+			loginRoleLevel: 2,
+			loginRoleId: "3",
 		}))
 	}, [i18n.language])
 
 	const setCurrentNationFlag = () => {
 		let nation = i18n.language;
+
 		switch (nation) {
-			case "zh": {
+			case "zh_TW": {
 				setFlag(tw);
 				break;
 			}
-			case "en": {
+			case "en_US": {
 				setFlag(us);
 				break;
 			}
@@ -120,11 +121,13 @@ function Header() {
 									<b className="caret"></b>
 								</a>
 								<div className="dropdown-menu dropdown-menu-end me-1">
-									<a href="#" className="flag dropdown-item d-flex align-items-center mb-3" onClick={() => { i18n.changeLanguage("zh") }}>
+									<a href="#" className="flag dropdown-item d-flex align-items-center mb-3" onClick={() => {
+										i18n.changeLanguage("zh_TW")
+									}}>
 										<img src={tw} />
 										<div className="ps-2 fw-bold">繁體中文</div>
 									</a>
-									<a href="#" className="flag dropdown-item d-flex align-items-center mb-3" onClick={() => { i18n.changeLanguage("en") }}>
+									<a href="#" className="flag dropdown-item d-flex align-items-center mb-3" onClick={() => { i18n.changeLanguage("en_US") }}>
 										<img src={us} />
 										<div className="ps-2 fw-bold">ENGLISH</div>
 									</a>

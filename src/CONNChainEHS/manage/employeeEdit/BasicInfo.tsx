@@ -14,6 +14,7 @@ export interface UserInfo {
     jobTitle: string;
     jobTitleId: number;
     roleName: string;
+    roleId: string;
     userEmail: string;
     userEmail2: string;
     phone: string;
@@ -31,6 +32,10 @@ export interface UserInfo {
 export default function BasicInfo(props: { userInfo: UserInfo, onChange: (data: any) => void }) {
     const { userInfo, onChange } = props;
     const [isEdit, setIsEdit] = useState(false);
+    const [selectList, setSelectList] = useState({
+        jobTitle: [],
+        userRoleList: []
+    })
     const { t } = useTranslation();
     const loginUser = useLoginUser();
 
@@ -54,6 +59,7 @@ export default function BasicInfo(props: { userInfo: UserInfo, onChange: (data: 
                 userBirthday: userInfo.showBirthday,
                 userGender: userInfo.userGender,
                 origUnit: userInfo.origUnit,
+                roleId: userInfo.roleId
             }).then(result => {
                 if (result.status === 'Success') {
                     Success("編輯成功")
@@ -62,13 +68,43 @@ export default function BasicInfo(props: { userInfo: UserInfo, onChange: (data: 
                 }
                 setIsEdit(false)
             }).catch(err => {
-                alert(err)
+                Warning(err)
             })
         } else {
             setIsEdit(true)
+            fetchSelectList();
         }
     }
 
+    const fetchSelectList = async () => {
+        Promise.all([
+            EmployeeAPI.getUserRoleList({
+                ...loginUser!,
+                userId: userInfo.userId
+            }),
+            EmployeeAPI.getJobTitles({
+                ...loginUser!
+            })
+        ]).then(([result1, result2]) => {
+            setSelectList({
+                ...selectList,
+                userRoleList: result1.results.map((data: any) => {
+                    return {
+                        content: data.roleName,
+                        value: data.roleId
+                    }
+                }),
+                jobTitle: result2.results.map((data: any) => {
+                    return {
+                        content: data.label,
+                        value: data.value
+                    }
+                })
+            })
+        }).catch(err => {
+            Warning(err)
+        })
+    }
     return (
         <StyledBasicInformation>
             <div className="card py-3">
@@ -86,20 +122,23 @@ export default function BasicInfo(props: { userInfo: UserInfo, onChange: (data: 
                             </div>
                             <div className="col-md-3 mb-3">{t('table.title.job_title')}</div>
                             <div className="col-md-9 mb-3 fs-5">
-                                {!isEdit ? <span className="edit">{userInfo.jobTitle}</span> :
-                                    <select name="" id="" className="form-select" data-parsley-required="true" onChange={(e) => { onChange({ jobTitle: e.target.value }) }}>
-                                        <option value="01">專案組員</option>
-                                        <option value="02">環安中心人員</option>
-                                        <option value="03">實驗室負責人</option>
+                                {!isEdit ?
+                                    <span className="edit">{userInfo.jobTitle}</span> :
+                                    <select value={userInfo.jobTitleId}
+                                        name="" id="" className="form-select" data-parsley-required="true" onChange={(e) => { onChange({ jobTitleId: e.target.value }) }}>
+                                        <option value="">無</option>
+                                        {
+                                            selectList.jobTitle.map((job: any) => <option key={job.value} value={job.value}>{job.content}</option>)
+                                        }
                                     </select>}
                             </div>
                             <div className="col-md-3 mb-3">目前權限</div>
                             <div className="col-md-9 mb-3 fs-5">
                                 {!isEdit ? <span className="edit">{userInfo.roleName}</span> :
-                                    <select name="" id="" className="form-select" data-parsley-required="true" value={userInfo.roleName} onChange={(e) => { onChange({ roleName: e.target.value }) }}>
-                                        <option value="01">管理者</option>
-                                        <option value="02">環安中心人員</option>
-                                        <option value="03">實驗室負責人</option>
+                                    <select name="" id="" className="form-select" data-parsley-required="true" value={userInfo.roleId} onChange={(e) => { onChange({ roleName: e.target.value }) }}>
+                                        {
+                                            selectList.userRoleList.map((role: any) => <option key={role.value} value={role.value}>{role.content}</option>)
+                                        }
                                     </select>}
                             </div>
                             <div className="col-md-3 mb-3">{t("text.email")}</div>
@@ -169,6 +208,11 @@ export default function BasicInfo(props: { userInfo: UserInfo, onChange: (data: 
                                 <button type="button" className="btn btn-warning fs-5" title="修改個人資料" data-type="edit" id="changeInput" onClick={editUser}>
                                     <i className="fas fa-pen-to-square"></i> {isEdit ? "儲存個人資料" : "修改個人資料"}
                                 </button>
+                                {isEdit &&
+                                    <button type="button" className="btn fs-5 m-3" title="修改個人資料" data-type="edit" id="changeInput" onClick={() => setIsEdit(false)}>
+                                        取消
+                                    </button>
+                                }
                             </div>
                         </div>
                     </form>

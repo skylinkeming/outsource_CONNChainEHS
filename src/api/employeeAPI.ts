@@ -42,6 +42,43 @@ export const EmployeeAPI = {
             })
         }).then(res=>res.json())
     },
+    getJobTitles:async (parms:{
+        loginUserId:string, 
+        loginRoleLevel:number,
+        loginRoleId:string,
+        langType:string,
+    })=>{
+        return fetch(Config.apiAddress+'selectlist/config/type/subtype',{
+            method: "POST",
+            headers: {  
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+            },
+            body: JSON.stringify({
+                ...parms,
+                configType:"user",
+                configSubType:"jobtitle"
+            })
+        }).then(res=>res.json())
+    },
+    getUserRoleList:async (parms:{
+        loginUserId:string, 
+        loginRoleLevel:number,
+        loginRoleId:string,
+        langType:string,
+        userId:string,
+    })=>{
+        return fetch(Config.apiAddress+'rou/list',{
+            method: "POST",
+            headers: {  
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+            },
+            body: JSON.stringify({
+                ...parms,
+            })
+        }).then(res=>res.json())
+    },
     getUserDetail:async (parms:{
         loginUserId:string, 
         loginRoleLevel:number,
@@ -78,6 +115,7 @@ export const EmployeeAPI = {
         userBirthday:string,
         userGender:string,
         origUnit:string,
+        roleId:string,
     })=>{
         return fetch(Config.apiAddress+'/user/edit',{
             method: "POST",
@@ -90,15 +128,55 @@ export const EmployeeAPI = {
             })
         }).then(res=>res.json())
     },
-
-   
-    getGroupList:async (parms:{
+    changeUserStatus:async (parms:{
         loginUserId:string, 
         loginRoleLevel:number,
         loginRoleId:string,
-        langType:string,    
+        langType:string,  
+        userId:string,
+        userStatus:string  
     })=>{
-        return fetch(Config.apiAddress+'/group/list',{
+        return fetch(Config.apiAddress+'user/update/status',{
+            method: "POST",
+            headers: {  
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+            },
+            body: JSON.stringify({
+                ...parms
+            })
+        }).then(res=>res.json())
+    },
+    searchLab:async (parms:{
+        loginUserId:string, 
+        loginRoleLevel:number,
+        loginRoleId:string,
+        langType:string,  
+        keyword:string,
+        
+    })=>{
+        return fetch(Config.apiAddress+'lab/list',{
+            method: "POST",
+            headers: {  
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+            },
+            body: JSON.stringify({
+                ...parms
+            })
+        }).then(res=>res.json())
+    },
+    joinLab:async (parms:{
+        loginUserId:string, 
+        loginRoleLevel:number,
+        loginRoleId:string,
+        langType:string,  
+        userId:string,
+        roleId:string,
+        labId:string,
+        orgId:string
+    })=>{
+        return fetch(Config.apiAddress+'rou/single/add',{
             method: "POST",
             headers: {  
                 "Content-Type": "application/json",
